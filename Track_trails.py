@@ -29,6 +29,46 @@ def time_synchronized():
     torch.cuda.synchronize() if torch.cuda.is_available() else None
     return time.time()
 
+pts = {}
+
+def vis_track(img, outputs):
+
+    for key in list(pts):
+        if key not in outputs[:,-2]:
+            pts.pop(key)
+
+    for i in range(len(outputs)):
+        box = outputs[i]
+        x0 = int(box[0])
+        y0 = int(box[1])
+        x1 = int(box[2])
+        y1 = int(box[3])
+        id = box[4]
+        clsid = box[5]
+
+        if id not in pts:
+            pts[id] = deque(maxlen=64)
+
+        # pts = { '1' : deque(),'2' : deque()}
+
+        center = (int((x0+x1)/2) , int((y0+y1)/2))
+        pts[id].append(center)
+
+        # Drawing a circle
+        color = compute_color_for_labels(clsid)
+        thickness = 5
+        cv2.circle(img,  (center), 1, color, thickness)
+
+        # Draw motion path
+        for j in range(1, len(pts[id])):
+            if pts[id][j - 1] is None or pts[id][j] is None:
+                continue
+            thickness = int(np.sqrt(64 / float(j + 1)) * 3)
+            cv2.line(img,(pts[id][j-1]), (pts[id][j]),(color),thickness)
+
+    return img
+
+
 
 # Draw the boxes having tracking indentities 
 def draw_boxes(img, bbox, object_id, identities=None, offset=(0, 0)):
@@ -53,46 +93,6 @@ def draw_boxes(img, bbox, object_id, identities=None, offset=(0, 0)):
         UI_box(box, img, label=label + str(id), color=color, line_thickness=3, boundingbox=True)
 
     return img
-
-# Dictionary to save center points
-pts = {}
-
-def vis_track(img, outputs ):
-
-    # Looping over each detection
-    for i in range(len(outputs)):
-        box = outputs[i]
-        x0 = int(box[0])
-        y0 = int(box[1])
-        x1 = int(box[2])
-        y1 = int(box[3])
-        id = box[4]
-        clsid = box[5]
-
-        # create a deque for each unique id if it doesnot already existed 
-        if id not in pts:
-            pts[id] = deque(maxlen= 64)
-
-        center = (int(((box[0])+(box[2]))/2),int(((box[1])+(box[3]))/2))
-        pts[id].append(center)
-
-        # Drawing a circle
-        color = compute_color_for_labels(clsid)
-        thickness = 5
-        cv2.circle(img,  (center), 1, color, thickness)
-
-        #draw motion path
-        for j in range(1, len(pts[id])):
-            if pts[id][j - 1] is None or pts[id][j] is None:
-                continue
-            thickness = int(np.sqrt(64 / float(j + 1)) * 3)
-            cv2.line(img,(pts[id][j-1]), (pts[id][j]),(color),thickness)
-    
-    return img
-
-
-
-
 
 # Tracking class to integrate Deepsort tracking with our detector
 class Tracker():
