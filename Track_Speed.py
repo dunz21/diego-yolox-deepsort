@@ -22,8 +22,11 @@ from visuals import *
 
 from intersect_ import *
 
+import math
+
 # A Dictionary to keep data of tracking
 data_deque = {}
+speed_dict = {}
 
 class_names = COCO_CLASSES
 
@@ -38,6 +41,27 @@ object_counter = {
     'Line2' : Counter()
 }
 
+def estimateSpeed(location1, location2):
+
+    height = location1[0] - location2[0]
+    width = location1[1] - location2[1]
+    
+    distance_in_pixels = math.sqrt(math.pow(height,2) + math.pow(width,2))
+
+    pixels_per_meter = 15
+
+    distance_in_meters = distance_in_pixels/pixels_per_meter
+
+    fps = 30 
+    Time_  = 1/fps
+
+    speed_mps = pixels_per_meter/Time_
+
+    speed_kmph = speed_mps*(3600/1000)
+
+    return int(speed_kmph)
+
+
 
 
 
@@ -48,7 +72,7 @@ def draw_lines(lines, img):
     return img
 
 # Update the Counter
-def update_counter(centerpoints, obj_name):
+def update_counter(centerpoints, obj_name, id):
     for line in lines:
         p1 = Point(*centerpoints[0])
         q1 = Point(*centerpoints[1])
@@ -56,6 +80,8 @@ def update_counter(centerpoints, obj_name):
         q2 = Point(*line['Cords'][1])
         if doIntersect(p1, q1, p2, q2):
             object_counter[line['Title']].update([obj_name])
+            speed = estimateSpeed(location1 = centerpoints[0], location2 = centerpoints[1])
+            speed_dict[id] = speed
             return True
     return False
 
@@ -83,6 +109,7 @@ def draw_boxes(img, bbox, object_id, identities=None, offset=(0, 0)):
     height, width, _ = img.shape 
     # Cleaning any previous Enteries
     [data_deque.pop(key) for key in set(data_deque) if key not in identities]
+    [speed_dict.pop(key) for key in set(data_deque) if key not in identities]
 
     for i, box in enumerate(bbox):
         x1, y1, x2, y2 = [int(i) +offset[0]  for i in box]  
@@ -98,10 +125,17 @@ def draw_boxes(img, bbox, object_id, identities=None, offset=(0, 0)):
         label = '%s' % (obj_name)
         
         data_deque[id].appendleft(center) #appending left to speed up the check we will check the latest map
-        UI_box(box, img, label=label + str(id), color=color, line_thickness=3, boundingbox=True)
 
         if len(data_deque[id]) >=2:
-            update_counter(centerpoints = data_deque[id], obj_name = obj_name)
+            update_counter(centerpoints = data_deque[id], obj_name = obj_name, id = id)
+
+        if id in speed_dict:
+            speed = speed_dict[id]
+        else:
+            speed = ''
+        
+        UI_box(box, img, label=label + str(speed) + 'km/h', color=color, line_thickness=3, boundingbox=True)
+        
 
     return img
 
@@ -160,7 +194,7 @@ if __name__=='__main__':
     length = int(cv2.VideoCapture.get(cap, property_id))
 
     vid_writer = cv2.VideoWriter(
-        f'count_demo_{sys.argv[1]}', cv2.VideoWriter_fourcc(*"mp4v"), fps, (int(width), int(height))
+        f'speed_demo_{sys.argv[1]}', cv2.VideoWriter_fourcc(*"mp4v"), fps, (int(width), int(height))
     ) # open one video
     frame_count = 0
     fps = 0.0
