@@ -110,6 +110,7 @@ def draw_boxes(img, bbox, object_id, identities=None, offset=(0, 0)):
     # Cleaning any previous Enteries
     [data_deque.pop(key) for key in set(data_deque) if key not in identities]
     [speed_dict.pop(key) for key in set(data_deque) if key not in identities]
+    
 
     for i, box in enumerate(bbox):
         x1, y1, x2, y2 = [int(i) +offset[0]  for i in box]  
