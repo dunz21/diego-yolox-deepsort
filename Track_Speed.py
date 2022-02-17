@@ -55,7 +55,7 @@ def estimateSpeed(location1, location2):
     fps = 30 
     Time_  = 1/fps
 
-    speed_mps = pixels_per_meter/Time_
+    speed_mps = distance_in_meters/Time_
 
     speed_kmph = speed_mps*(3600/1000)
 
