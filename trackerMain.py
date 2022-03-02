@@ -1,4 +1,3 @@
-   
 import sys
 sys.path.insert(0, './YOLOX')
 import torch
@@ -20,15 +19,13 @@ from deep_sort.deep_sort import DeepSort
 
 # Importing Visuals
 from visuals import *
-
 from intersect_ import *
 
-import imutils
-
-import cvzone
+import math
 
 # A Dictionary to keep data of tracking
 data_deque = {}
+speed_dict = {}
 
 class_names = COCO_CLASSES
 
@@ -47,104 +44,56 @@ object_counter = {
     'West'  : Counter(),
 }
 
-# Steps 
+pts = {}
 
-"""
-- Update the Lines
-- Update the object counter 
-- Overlay Compass 
-- Overlay emojis
-- Combine everything
-"""
+def vis_track(img, outputs):
 
-def create_overlay(path):
-    overlay = cv2.imread(path, cv2.IMREAD_UNCHANGED)
-    overlay = imutils.rotate(overlay, -45)
-    overlay = cv2.resize(overlay, (800,800))
-    return overlay
+    for key in list(pts):
+        if key not in outputs[:,-2]:
+            pts.pop(key)
 
+    for i in range(len(outputs)):
+        box = outputs[i]
+        x0 = int(box[0])
+        y0 = int(box[1])
+        x1 = int(box[2])
+        y1 = int(box[3])
+        id = box[4]
+        clsid = box[5]
 
-def add_overlay(imgsrc, overlay, cords):
-    return cvzone.overlayPNG(imgsrc, overlay, cords)
+        if id not in pts:
+            pts[id] = deque(maxlen=64)
 
+        center = (int((x0+x1)/2) , int((y0+y1)/2))
+        pts[id].append(center)
 
-def vid_to_frames(path):
-    frames = []
-    cap = cv2.VideoCapture(path)
-    ret = True
-    while ret:
-        ret, img = cap.read() # read one frame from the 'capture' object; img is (H, W, C)
-        if ret:
-            frames.append(img)
-    return frames
+        # Drawing a circle
+        color = compute_color_for_labels(clsid)
+        thickness = 5
+        cv2.circle(img,  (center), 1, color, thickness)
 
-# Overlaying Image and Emoji
-def add_image(img, src2, x, y):
-    # x=  x+90
-    # y = y-10
-    w = 80
-    h = 80
-
-    initial = img[y:y+h,x:x+w]
-    src1 = initial
-    src2 = cv2.resize(src2, src1.shape[1::-1])
-    u_green = np.array([1, 1, 1])
-    l_green = np.array([0, 0, 0])
-    mask = cv2.inRange(src2, l_green, u_green)
-    res = cv2.bitwise_and(src2, src2, mask = mask)
-    f = src2 - res
-    f = np.where(f == 0, src1, f)
-    img[y:y+h,x:x+w] = f
-    return img
-
-
-emojidict = dict(
-    car = vid_to_frames('assets/car.gif'),
-    truck = vid_to_frames('assets/truck.gif'),   
-
-    )
-
-emoji_frame_count = {
-    'car' : 0,
-    'truck' : 0
-}
-
-
-# Add Directions Details
-def add_dir_details(x, y, dir_,img):
-    # Car Emoji
-    img = add_image(img, emojidict['car'][emoji_frame_count['car']] ,x, y )
-    # Truck Emoji
-    img = add_image(img, emojidict['truck'][emoji_frame_count['truck']] ,x+150, y )
-    # Direction Text
-    cv2.putText(img, dir_, (x-170,y+75), 6, 2, (255, 255, 255), 3, cv2.LINE_AA)
-    # Car Count
-    if 'car' in list(object_counter[dir_]):
-        cv2.putText(img, str(object_counter[dir_]['car']), (x,y+100), 6, 1, (104, 52, 235), 3, cv2.LINE_AA)
-    # Truck Count
-    if 'truck' in list(object_counter[dir_]):
-        cv2.putText(img, str(object_counter[dir_]['truck']), (x+150,y+100), 6, 1, (104, 52, 235), 3, cv2.LINE_AA)
-
-    emoji_frame_count['car'] +=1
-    emoji_frame_count['truck'] +=1
-    
-    if emoji_frame_count['car'] == len(emojidict['car']):
-        emoji_frame_count['car'] = 0
-
-    if emoji_frame_count['truck'] == len(emojidict['truck']):
-        emoji_frame_count['truck'] = 0
+        # Draw motion path
+        for j in range(1, len(pts[id])):
+            if pts[id][j - 1] is None or pts[id][j] is None:
+                continue
+            thickness = int(np.sqrt(64 / float(j + 1)) * 3)
+            cv2.line(img,(pts[id][j-1]), (pts[id][j]),(color),thickness)
 
     return img
 
 
-# Draw each Direction results
-def draw_direction_results(img):
-    x = 200
-    y = 100
-    for dir_ in list(object_counter):
-        img = add_dir_details(x, y, dir_,img)
-        y +=110
-    return img
+
+def estimateSpeed(location1, location2):
+    height = location1[0] - location2[0]
+    width = location1[1] - location2[1]
+    distance_in_pixels = math.sqrt(math.pow(height,2) + math.pow(width,2))
+    pixels_per_meter = 15
+    distance_in_meters = distance_in_pixels/pixels_per_meter
+    fps = 30 
+    Time_  = 1/fps
+    speed_mps = distance_in_meters/Time_
+    speed_kmph = speed_mps*(3600/1000)
+    return int(speed_kmph)
 
 
 #Draw the Lines
@@ -153,8 +102,10 @@ def draw_lines(lines, img):
         img = cv2.line(img, line['Cords'][0], line['Cords'][1], (255,255,255), 3)
     return img
 
+
 # Update the Counter
-def update_counter(centerpoints, obj_name):
+def update_counter(centerpoints, obj_name, id):
+    data = []
     for line in lines:
         p1 = Point(*centerpoints[0])
         q1 = Point(*centerpoints[1])
@@ -162,8 +113,17 @@ def update_counter(centerpoints, obj_name):
         q2 = Point(*line['Cords'][1])
         if doIntersect(p1, q1, p2, q2):
             object_counter[line['Title']].update([obj_name])
-            return True
-    return False
+            speed = estimateSpeed(location1 = centerpoints[0], location2 = centerpoints[1])
+            speed_dict[id] = speed
+            data.append({
+                'Category' : obj_name,
+                'direction': line['Title'],
+                'Time'     : datetime.datetime.now().strftime('%Y-%m-%d %H:%M'),
+                'Speed'    : speed,
+                'id'       : id
+                    })                
+    return data
+
 
 # Draw the Final Results
 def draw_results(img):
@@ -184,11 +144,14 @@ def time_synchronized():
     return time.time()
 
 
+
 # Draw the boxes having tracking indentities 
 def draw_boxes(img, bbox, object_id, identities=None, offset=(0, 0)):
     height, width, _ = img.shape 
     # Cleaning any previous Enteries
     [data_deque.pop(key) for key in set(data_deque) if key not in identities]
+    [speed_dict.pop(key) for key in set(data_deque) if key not in identities]
+    
 
     for i, box in enumerate(bbox):
         x1, y1, x2, y2 = [int(i) +offset[0]  for i in box]  
@@ -204,11 +167,17 @@ def draw_boxes(img, bbox, object_id, identities=None, offset=(0, 0)):
         label = '%s' % (obj_name)
         
         data_deque[id].appendleft(center) #appending left to speed up the check we will check the latest map
-        UI_box(box, img, label=label + str(id), color=color, line_thickness=3, boundingbox=True)
-
+        data = [] #Add empty Data Here
         if len(data_deque[id]) >=2:
-            update_counter(centerpoints = data_deque[id], obj_name = obj_name)
+            data = update_counter(centerpoints = data_deque[id], obj_name = obj_name, id = id)
 
+        if id in speed_dict:
+            speed = speed_dict[id]
+        else:
+            speed = ''
+        
+        UI_box(box, img, label=label + str(speed) + 'km/h', color=color, line_thickness=3, boundingbox=True)
+        
     return img
 
 # Tracking class to integrate Deepsort tracking with our detector
@@ -242,52 +211,13 @@ class Tracker():
                 
             bbox_xywh = torch.Tensor(bbox_xywh)
             outputs = self.deepsort.update(bbox_xywh, scores, info['class_ids'],image)
-            data = []
+            data = [] #Add empty list here
             if len(outputs) > 0:
                 if visual:
                     if len(outputs) > 0:
                         bbox_xyxy =outputs[:, :4]
                         identities =outputs[:, -2]
                         object_id =outputs[:, -1]
-                        image = draw_boxes(image, bbox_xyxy, object_id,identities)
-            return image, outputs
+                        image, data = draw_boxes(image, bbox_xyxy, object_id,identities)
+            return image, outputs, data
 
-
-if __name__=='__main__':
-    
-        
-    tracker = Tracker(filter_classes=None, model='yolox-s', ckpt='weights/yolox_s.pth')    # instantiate Tracker
-
-    cap = cv2.VideoCapture(sys.argv[1]) 
-    width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)  # float
-    height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)  # float
-    fps = cap.get(cv2.CAP_PROP_FPS)
-    property_id = int(cv2.CAP_PROP_FRAME_COUNT) 
-    length = int(cv2.VideoCapture.get(cap, property_id))
-    overlay = create_overlay(path='assets/overlay.png')
-
-    vid_writer = cv2.VideoWriter(
-        f'Direction_demo_{sys.argv[1]}', cv2.VideoWriter_fourcc(*"mp4v"), fps, (int(width), int(height))
-    ) # open one video
-    frame_count = 0
-    fps = 0.0
-    while True:
-        ret_val, frame = cap.read() # read frame from video
-        t1 = time_synchronized()
-        if ret_val:
-            frame, bbox = tracker.update(frame, visual=True, logger_=False)  # feed one frame and get result
-            frame = draw_lines(lines, img = frame)
-            # frame = draw_results(img= frame)
-            frame = add_overlay(imgsrc = frame, overlay=overlay, cords = [800,280])
-            frame = draw_direction_results(frame)
-            vid_writer.write(frame)
-            ch = cv2.waitKey(1)
-            if ch == 27 or ch == ord("q") or ch == ord("Q"):
-                break
-            fps  = ( fps + (1./(time_synchronized()-t1)) ) / 2
-        else:
-            break
-
-    cap.release()
-    vid_writer.release()
-    cv2.destroyAllWindows()
