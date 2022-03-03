@@ -76,8 +76,32 @@ def video_feed():
 
 # ---------------------------------------------------------------------------------------------------#
 
+videofeed = html.Img(src = "/video_feed")
+
+videofeeds = dbc.Col(width=4, children =[
+        html.Img(src = "/video_feed", style = {
+            'max-width':'100%',
+            'height':'auto',
+            'display':'block',
+            'margin-left':'auto',
+            'margin-right':'auto'
+
+        })
+    ]
+
+) 
+
+header = dbc.Col(width = 10,
+    children = [ html.H1("Traffic Flow Management", style = {'text-align':'center'})]
+)
+
+
 app.layout = html.Div([
-    html.Img(src = "/video_feed")
+    dbc.Row([header]), #Header
+    dbc.Row([]), #Cards
+    dbc.Row([videofeeds]), #VideoFeed and 2 Graphs
+
+
 
 ])
 
