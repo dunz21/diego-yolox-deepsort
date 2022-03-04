@@ -13,7 +13,10 @@ from flask import Flask, Response
 
 # Plotly-Dash Imports 
 
-from dash import Dash, html, dcc
+from dash import Dash, html, dcc, Input, Output
+import plotly.graph_objects as go
+import plotly.express as px
+
 from flask import Flask
 import dash_bootstrap_components  as dbc
 
@@ -76,35 +79,69 @@ def video_feed():
 
 # ---------------------------------------------------------------------------------------------------#
 
-videofeed = html.Img(src = "/video_feed")
-
+# Video Feed Component
 videofeeds = dbc.Col(width=4, children =[
         html.Img(src = "/video_feed", style = {
             'max-width':'100%',
             'height':'auto',
             'display':'block',
             'margin-left':'auto',
-            'margin-right':'auto'
+            'margin-right':'auto'})]) 
 
-        })
-    ]
-
-) 
-
+# Header Component
 header = dbc.Col(width = 10,
     children = [ html.H1("Traffic Flow Management", style = {'text-align':'center'})]
 )
 
+# Grpahical Components
+figure1 = dbc.Col([dcc.Graph(id="live-graph1")], width=4)
+figure2 = dbc.Col(dcc.Graph(id="live-graph2"), width=4)
 
 
+"""
+This Function Takes the input as n_interval and will execute by itself after a certain time
+It outputs the figures 
 
+"""
+@app.callback([
+    Output('live-graph1', 'figure'),
+    Output('live-graph2', 'figure'),
+    ],
+        [
+            Input('visual-update', 'n_intervals')
+        ]   
+)
+def update_visuals(n):
+    fig1     = go.FigureWidget()
+    fig2     = go.FigureWidget()
+    
+    # Dataset Creation 
+    df = pd.DataFrame(Main)
+
+    # Database Transformations
+    df = df.pivot_table(index = ['Time'], columns = 'Category', aggfunc = {'Category':"count"}).fillna(0)
+    df.columns = df.columns.droplevel(0)
+    df = df.reset_index()
+    df.Time = pd.to_datetime(df.Time)
+    
+    # Looping for adding scatter for each category
+    for col in columns:    
+        if col == "Time":
+            continue
+        fig1.add_scatter(name = col,x=df['Time'], y=df[col], fill='tonexty', showlegend=True, line_shape='spline')
+        fig2.add_scatter(name = col,x=df['Time'], y=df[col].cumsum(), fill='tonexty', showlegend=True, line_shape='spline')
+    
+    return fig1, fig2 
 
 
 
 app.layout = html.Div([
+    # Input for all the updating visuals
+    dcc.Interval(id='visual-update',interval=10000,n_intervals = 0),
+
     dbc.Row([header]), #Header
     dbc.Row([]), #Cards
-    dbc.Row([videofeeds]), #VideoFeed and 2 Graphs
+    dbc.Row([videofeeds, figure1, figure2]), #VideoFeed and 2 Graphs
 
 
 ])
