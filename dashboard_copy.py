@@ -32,7 +32,7 @@ app = Dash(__name__, server = server, external_stylesheets=[dbc.themes.BOOTSTRAP
 # Init Tracker
 tracker = Tracker(filter_classes= None, model = 'yolox-s', ckpt='weights/yolox_s.pth')
 
-Main = deque(maxlen = 1000)
+Main = []
 
 # -------------------------------------------------Getting Video Feeds ------------------------------#
 
