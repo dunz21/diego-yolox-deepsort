@@ -141,7 +141,7 @@ def update_visuals(n):
 
 app.layout = html.Div([
     # Input for all the updating visuals
-    dcc.Interval(id='visual-update',interval=10000,n_intervals = 0),
+    dcc.Interval(id='visual-update',interval=1000,n_intervals = 0),
 
     dbc.Row([header]), #Header
     dbc.Row([]), #Cards
