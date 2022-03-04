@@ -117,6 +117,7 @@ def update_visuals(n):
     
     # Dataset Creation 
     df = pd.DataFrame(Main)
+    print(len(df))
 
 
     # Database Transformations
@@ -127,11 +128,9 @@ def update_visuals(n):
     columns = df.columns
     
     # Looping for adding scatter for each category
-    print(columns)
     for col in columns:    
         if col == "Time":
             continue
-        print(col)
         fig1.add_scatter(name = col,x=df['Time'], y=df[col], fill='tonexty', showlegend=True, line_shape='spline')
         fig2.add_scatter(name = col,x=df['Time'], y=df[col].cumsum(), fill='tonexty', showlegend=True, line_shape='spline')
     
