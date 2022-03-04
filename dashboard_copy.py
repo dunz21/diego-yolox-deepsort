@@ -117,6 +117,8 @@ def update_visuals(n):
     
     # Dataset Creation 
     df = pd.DataFrame(Main)
+    if len(df)>0:
+        print("Data Entered")
 
     # Database Transformations
     df = df.pivot_table(index = ['Time'], columns = 'Category', aggfunc = {'Category':"count"}).fillna(0)
