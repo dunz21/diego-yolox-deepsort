@@ -57,9 +57,6 @@ class VideoCamera(object):
             t1 = time_synchronized()
             image = draw_lines(lines, image)
             image, bbox, data = tracker.update(image, logger_=False)
-            if len(data) >0:
-                print(data)
-
             image = vis_track(image, bbox)
             Main.extend(data)
             fps  = f"{int((1./(time_synchronized()-t1)))}"
