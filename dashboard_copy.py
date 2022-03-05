@@ -59,6 +59,7 @@ class VideoCamera(object):
             image, bbox, data = tracker.update(image, logger_=False)
             if len(data) >0:
                 print(data)
+
             image = vis_track(image, bbox)
             Main.extend(data)
             fps  = f"{int((1./(time_synchronized()-t1)))}"
@@ -119,7 +120,6 @@ def update_visuals(n):
     
     # Dataset Creation 
     df = pd.DataFrame(Main)
-    print(len(df))
 
 
     # Database Transformations
@@ -142,7 +142,7 @@ def update_visuals(n):
 
 app.layout = html.Div([
     # Input for all the updating visuals
-    dcc.Interval(id='visual-update',interval=1000,n_intervals = 0),
+    dcc.Interval(id='visual-update',interval=2000,n_intervals = 0),
 
     dbc.Row([header]), #Header
     dbc.Row([]), #Cards
