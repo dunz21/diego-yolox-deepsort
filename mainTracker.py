@@ -186,8 +186,6 @@ def draw_boxes(img, bbox, object_id, identities=None, offset=(0, 0)):
             data = update_counter(centerpoints = data_deque[id], obj_name = obj_name, id = id)
             frame_data.append(data)
 
-        if len(data)>0:
-            print("Transmission Success")
         if id in speed_dict:
             speed = speed_dict[id]
         else:
