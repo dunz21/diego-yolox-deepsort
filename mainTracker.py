@@ -166,7 +166,7 @@ def draw_boxes(img, bbox, object_id, identities=None, offset=(0, 0)):
     [data_deque.pop(key) for key in set(data_deque) if key not in identities]
     [speed_dict.pop(key) for key in set(data_deque) if key not in identities]
     
-
+    frame_data = []
     for i, box in enumerate(bbox):
         x1, y1, x2, y2 = [int(i) +offset[0]  for i in box]  
         box_height = (y2-y1)
@@ -184,19 +184,17 @@ def draw_boxes(img, bbox, object_id, identities=None, offset=(0, 0)):
 
         if len(data_deque[id]) >=2:
             data = update_counter(centerpoints = data_deque[id], obj_name = obj_name, id = id)
-        else:
-            data = []
+            frame_data.append(data)
+
         if len(data)>0:
             print("Transmission Success")
         if id in speed_dict:
             speed = speed_dict[id]
         else:
             speed = ''
-        
         UI_box(box, img, label=label + str(speed) + 'km/h', color=color, line_thickness=3, boundingbox=True)
-        
-
-    return img, data
+    
+    return img, frame_data
 
 # Tracking class to integrate Deepsort tracking with our detector
 class Tracker():
