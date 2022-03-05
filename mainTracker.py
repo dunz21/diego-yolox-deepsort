@@ -130,6 +130,7 @@ def update_counter(centerpoints, obj_name, id):
             object_counter[line['Title']].update([obj_name])
             speed = estimateSpeed(location1 = centerpoints[0], location2 = centerpoints[1])
             speed_dict[id] = speed
+            print("intersection detected")
             data.append({
                 'Category' : obj_name,
                 'direction': line['Title'],
