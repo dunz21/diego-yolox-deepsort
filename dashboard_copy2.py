@@ -34,6 +34,7 @@ tracker = Tracker(filter_classes= None, model = 'yolox-s', ckpt='weights/yolox_s
 
 Main = []
 
+
 # -------------------------------------------------Getting Video Feeds ------------------------------#
 
 def time_synchronized():
@@ -110,6 +111,15 @@ header = dbc.Col(width = 10,
 # Grpahical Components
 figure1 = dbc.Col([dcc.Graph(id="live-graph1")], width=4)
 figure2 = dbc.Col(dcc.Graph(id="live-graph2"), width=4)
+
+
+
+fps = 0
+res = "Calculating..."
+stream = "Stream 1"
+vehicleslastminute = 0
+vehiclestotal = 0
+
 
 
 """
