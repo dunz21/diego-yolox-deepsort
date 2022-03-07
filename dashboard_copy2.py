@@ -141,26 +141,27 @@ def update_visuals(n):
     fig2     = go.FigureWidget()
     
     # Dataset Creation 
-    df = pd.DataFrame(Main)
 
-    # Database Transformations
-    df = df.pivot_table(index = ['Time'], columns = 'Category', aggfunc = {'Category':"count"}).fillna(0)
-    df.columns = df.columns.droplevel(0)
-    df = df.reset_index()
-    df.Time = pd.to_datetime(df.Time)
-    columns = df.columns
-    
-    # Looping for adding scatter for each category
-    values_sum = []
-    for col in columns:    
-        if col == "Time":
-            continue
-        fig1.add_scatter(name = col,x=df['Time'], y=df[col], fill='tonexty', showlegend=True, line_shape='spline')
-        fig2.add_scatter(name = col,x=df['Time'], y=df[col].cumsum(), fill='tonexty', showlegend=True, line_shape='spline')
-        vehicleslastminute += df[col].values[-1]
-        vehiclestotal += df[col].cumsum().values[-1]
-        values_sum.append(df[col].sum())
-    
+    df = pd.DataFrame(Main)
+    if len(df) !=0:        
+        # Database Transformations
+        df = df.pivot_table(index = ['Time'], columns = 'Category', aggfunc = {'Category':"count"}).fillna(0)
+        df.columns = df.columns.droplevel(0)
+        df = df.reset_index()
+        df.Time = pd.to_datetime(df.Time)
+        columns = df.columns
+        
+        # Looping for adding scatter for each category
+        values_sum = []
+        for col in columns:    
+            if col == "Time":
+                continue
+            fig1.add_scatter(name = col,x=df['Time'], y=df[col], fill='tonexty', showlegend=True, line_shape='spline')
+            fig2.add_scatter(name = col,x=df['Time'], y=df[col].cumsum(), fill='tonexty', showlegend=True, line_shape='spline')
+            vehicleslastminute += df[col].values[-1]
+            vehiclestotal += df[col].cumsum().values[-1]
+            values_sum.append(df[col].sum())
+        
     cards = [
         create_card(Header= "Vehicles This Minute", Value = vehicleslastminute, cardcolor = "primary"),
         create_card(Header = "Total Vehicles", Value = vehiclestotal ,color="info"),
