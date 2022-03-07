@@ -137,10 +137,12 @@ It outputs the figures
     [Input('visual-update', 'n_intervals')]   
 )
 def update_visuals(n):
-    global fps,res,stream,vehicleslastminute,vehiclestotal,fig1,fig2    
-    
-    # Dataset Creation 
+    global fps, res, stream, vehicleslastminute, vehiclestotal
 
+    fig1 = go.FigureWidget()
+    fig2 = go.FigureWidget()
+    
+      # Dataset Creation 
     df = pd.DataFrame(Main)
     if len(df) !=0:        
         # Database Transformations
