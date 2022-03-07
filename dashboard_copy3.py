@@ -152,7 +152,6 @@ def update_visuals(n):
         columns = df.columns
        
         # Looping for adding scatter for each category
-        
         values_sum = []
         for col in columns:    
             if col == "Time":
@@ -163,6 +162,7 @@ def update_visuals(n):
             vehiclestotal += df[col].cumsum().values[-1]
             values_sum.append(df[col].sum())
         
+        # Pie Fig (has to be inside the IF statement)
         piefig = px.pie(
         labels=columns, names = columns, values=values_sum, hole=.5,
         title = "Traffic Distribution - Vehicle Type",
