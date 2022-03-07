@@ -150,12 +150,11 @@ def update_visuals(n):
         df = df.reset_index()
         df.Time = pd.to_datetime(df.Time)
         columns = df.columns
+        columns.remove('Time')
        
         # Looping for adding scatter for each category
         values_sum = []
         for col in columns:    
-            if col == "Time":
-                continue
             fig1.add_scatter(name = col,x=df['Time'], y=df[col], fill='tonexty', showlegend=True, line_shape='spline')
             fig2.add_scatter(name = col,x=df['Time'], y=df[col].cumsum(), fill='tonexty', showlegend=True, line_shape='spline')
             vehicleslastminute += df[col].values[-1]
@@ -163,9 +162,9 @@ def update_visuals(n):
             values_sum.append(df[col].sum())
         
         # Pie Fig (has to be inside the IF statement)
-        comm_values = [df[i].sum() for i in columns]
+ 
         piefig = px.pie(
-        labels=columns, names = columns, values=comm_values, hole=.5,
+        labels=columns, names = columns, values=values_sum, hole=.5,
         title = "Traffic Distribution - Vehicle Type",
         color_discrete_sequence=px.colors.sequential.Agsunset, opacity=0.85)
         
