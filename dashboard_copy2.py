@@ -117,8 +117,7 @@ figure2 = dbc.Col(dcc.Graph(id="live-graph2"), width=4)
 fps = 0
 res = "Calculating..."
 stream = "Stream 1"
-vehicleslastminute = 0
-vehiclestotal = 0
+
 
 
 
@@ -137,12 +136,14 @@ It outputs the figures
     [Input('visual-update', 'n_intervals')]   
 )
 def update_visuals(n):
-    global fps, res, stream, vehicleslastminute, vehiclestotal
+    global fps, res, stream
 
     fig1 = go.FigureWidget()
     fig2 = go.FigureWidget()
     
-      # Dataset Creation 
+    # Dataset Creation 
+    vehicleslastminute = 0
+    vehiclestotal = 0
     df = pd.DataFrame(Main)
     if len(df) !=0:        
         # Database Transformations
@@ -153,6 +154,7 @@ def update_visuals(n):
         columns = df.columns
         
         # Looping for adding scatter for each category
+        
         values_sum = []
         for col in columns:    
             if col == "Time":
