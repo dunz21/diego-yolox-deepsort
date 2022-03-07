@@ -163,10 +163,10 @@ def update_visuals(n):
         
     cards = [
         create_card(Header= "Vehicles This Minute", Value = vehicleslastminute, cardcolor = "primary"),
-        create_card(Header = "Total Vehicles", Value = vehiclestotal ,color="info"),
-        create_card(Header = "Frames Per Second", Value= fps ,color="primary"),
-        create_card(Header = "Resolution", Value= res ,color="warning"),
-        create_card(Header = "Video Stream", Value= stream,color="danger")
+        create_card(Header = "Total Vehicles", Value = vehiclestotal ,cardcolor="info"),
+        create_card(Header = "Frames Per Second", Value= fps ,cardcolor="primary"),
+        create_card(Header = "Resolution", Value= res ,cardcolor="warning"),
+        create_card(Header = "Video Stream", Value= stream,cardcolor="danger")
     ]
     return (fig1, fig2, cards )
 
