@@ -137,8 +137,7 @@ It outputs the figures
     [Input('visual-update', 'n_intervals')]   
 )
 def update_visuals(n):
-    fig1     = go.FigureWidget()
-    fig2     = go.FigureWidget()
+    global fps,res,stream,vehicleslastminute,vehiclestotal,fig1,fig2    
     
     # Dataset Creation 
 
