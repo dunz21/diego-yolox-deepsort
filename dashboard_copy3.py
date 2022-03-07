@@ -150,10 +150,7 @@ def update_visuals(n):
         df = df.reset_index()
         df.Time = pd.to_datetime(df.Time)
         columns = df.columns
-        piefig = px.pie(
-        labels=columns, names = columns, values=values_sum, hole=.5,
-        title = "Traffic Distribution - Vehicle Type",
-        color_discrete_sequence=px.colors.sequential.Agsunset, opacity=0.85)
+       
         # Looping for adding scatter for each category
         
         values_sum = []
@@ -165,6 +162,11 @@ def update_visuals(n):
             vehicleslastminute += df[col].values[-1]
             vehiclestotal += df[col].cumsum().values[-1]
             values_sum.append(df[col].sum())
+        
+        piefig = px.pie(
+        labels=columns, names = columns, values=values_sum, hole=.5,
+        title = "Traffic Distribution - Vehicle Type",
+        color_discrete_sequence=px.colors.sequential.Agsunset, opacity=0.85)
         
     cards = [
         create_card(Header= "Vehicles This Minute", Value = vehicleslastminute, cardcolor = "primary"),
