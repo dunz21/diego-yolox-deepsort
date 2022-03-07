@@ -79,7 +79,7 @@ def video_feed():
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 # ---------------------------------------------------------------------------------------------------#
-
+# Card Component
 def create_card(Header, Value, cardcolor):
     card = dbc.Col([
         dbc.Card( [
@@ -119,8 +119,6 @@ res = "Calculating..."
 stream = "Stream 1"
 
 
-
-
 """
 This Function Takes the input as n_interval and will execute by itself after a certain time
 It outputs the figures 
@@ -136,8 +134,6 @@ It outputs the figures
     [Input('visual-update', 'n_intervals')]   
 )
 def update_visuals(n):
-    global fps, res, stream
-
     fig1 = go.FigureWidget()
     fig2 = go.FigureWidget()
     
