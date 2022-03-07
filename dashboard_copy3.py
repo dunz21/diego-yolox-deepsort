@@ -137,6 +137,7 @@ It outputs the figures
 def update_visuals(n):
     fig1 = go.FigureWidget()
     fig2 = go.FigureWidget()
+    piefig = go.FigureWidget()
     
     # Dataset Creation 
     vehicleslastminute = 0
@@ -149,7 +150,10 @@ def update_visuals(n):
         df = df.reset_index()
         df.Time = pd.to_datetime(df.Time)
         columns = df.columns
-        
+        piefig = px.pie(
+        labels=columns, names = columns, values=values_sum, hole=.5,
+        title = "Traffic Distribution - Vehicle Type",
+        color_discrete_sequence=px.colors.sequential.Agsunset, opacity=0.85)
         # Looping for adding scatter for each category
         
         values_sum = []
@@ -170,10 +174,7 @@ def update_visuals(n):
         create_card(Header = "Video Stream", Value= stream,cardcolor="danger")
     ]
 
-    piefig = px.pie(
-        labels=columns, names = columns, values=values_sum, hole=.5,
-        title = "Traffic Distribution - Vehicle Type",
-        color_discrete_sequence=px.colors.sequential.Agsunset, opacity=0.85)
+ 
     return (fig1, fig2, cards, piefig )
 
 
