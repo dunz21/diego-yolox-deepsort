@@ -163,8 +163,9 @@ def update_visuals(n):
             values_sum.append(df[col].sum())
         
         # Pie Fig (has to be inside the IF statement)
+        comm_values = [df[i].sum() for i in columns]
         piefig = px.pie(
-        labels=columns, names = columns, values=values_sum, hole=.5,
+        labels=columns, names = columns, values=comm_values, hole=.5,
         title = "Traffic Distribution - Vehicle Type",
         color_discrete_sequence=px.colors.sequential.Agsunset, opacity=0.85)
         
