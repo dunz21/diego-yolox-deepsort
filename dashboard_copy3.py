@@ -149,7 +149,7 @@ def update_visuals(n):
         df.columns = df.columns.droplevel(0)
         df = df.reset_index()
         df.Time = pd.to_datetime(df.Time)
-        columns = df.columns
+        columns = list(df.columns)
         columns.remove('Time')
        
         # Looping for adding scatter for each category

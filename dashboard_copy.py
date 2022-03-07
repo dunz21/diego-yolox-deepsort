@@ -124,12 +124,12 @@ def update_visuals(n):
     df.columns = df.columns.droplevel(0)
     df = df.reset_index()
     df.Time = pd.to_datetime(df.Time)
-    columns = df.columns
+    columns = list(df.columns)
+    columns.remove('Time')
+
     
     # Looping for adding scatter for each category
     for col in columns:    
-        if col == "Time":
-            continue
         fig1.add_scatter(name = col,x=df['Time'], y=df[col], fill='tonexty', showlegend=True, line_shape='spline')
         fig2.add_scatter(name = col,x=df['Time'], y=df[col].cumsum(), fill='tonexty', showlegend=True, line_shape='spline')
     
