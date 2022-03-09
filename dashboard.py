@@ -184,8 +184,8 @@ def update_visuals(n):
     # Dataset Creation a
     vehicleslastminute = 0
     vehiclestotal = 0
+    df = pd.DataFrame(Main)
     if len(df) !=0:        
-        df = pd.DataFrame(Main)
         df1 = df.copy()
         df['count'] = 1
         average_speed = int(df["Speed"].mean())
