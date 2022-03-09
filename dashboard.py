@@ -198,7 +198,7 @@ def update_visuals(n):
         columns.remove('Time')
 
         # Direction Datset
-        dirdf = df.groupby(['direction']).agg({"Speed": np.mean}).reset_index()
+        dirdf = df1.groupby(['direction']).agg({"Speed": np.mean}).reset_index()
 
         # Sunburst Dataset
         df_all_trees = build_hierarchical_dataframe(df=df1, levels = ["Category",'direction'], value_column = "count")
