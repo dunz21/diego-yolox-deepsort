@@ -241,13 +241,14 @@ def update_visuals(n):
 
         )
 
-        sunfig = go.Sunburst(
+        sunfig = go.FigureWidget(go.Sunburst(
         labels = df_all_trees['id'],
         parents = df_all_trees['parent'],
         values = df_all_trees['value'],
         branchvalues = 'total',
         textinfo = 'label+percent entry',
         opacity = 0.85
+    )
     )
 
     cards = [
