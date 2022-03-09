@@ -138,7 +138,7 @@ figure2 = dbc.Col(dcc.Graph(id="live-graph2"), width=4)
 piefig = dbc.Col(dcc.Graph(id="piefig"), width=4)
 dirfig = dbc.Col(dcc.Graph(id="dirfig"), width=4)
 sunfig = dbc.Col(dcc.Graph(id="sunfig"), width=4)
-speedfig = dbc.Col(dcc.Graph(id="sunfig"), width=8)
+speedfig = dbc.Col(dcc.Graph(id="speedfig"), width=8)
 infig = dbc.Col(dcc.Graph(id="infig"), width=4)
 
 
