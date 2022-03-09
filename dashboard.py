@@ -187,7 +187,7 @@ def update_visuals(n):
     df = pd.DataFrame(Main)
     if len(df) !=0:        
         df1 = df.copy()
-        df['count'] = 1
+        df1['count'] = 1
         average_speed = int(df["Speed"].mean())
         # Database Transformations
         df = df.pivot_table(index = ['Time'], columns = 'Category', aggfunc = {'Category':"count"}).fillna(0)
