@@ -106,7 +106,7 @@ def create_card(Header, Value, cardcolor):
     card = dbc.Col([
         dbc.Card([
             dbc.CardHeader(Header, style = {'text-align':'center'}),
-            dbc.Cardbody([
+            dbc.CardBody([
                 html.H3(Value, style = {'text-align':'center'})
             ])
         ], color = cardcolor, inverse=True, style = {
