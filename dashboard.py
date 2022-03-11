@@ -21,11 +21,13 @@ from flask import Flask
 import dash_bootstrap_components  as dbc
 
 from mainTracker import Tracker, vis_track, draw_lines, lines
+from flask_cloudflared import  run_with_cloudflared
+
 
 
 # Init Flask Server
 server = Flask(__name__)
-
+run_with_cloudflared(server)
 # Init Dash App
 app = Dash(__name__, server = server, external_stylesheets=[dbc.themes.BOOTSTRAP])
 
