@@ -23,6 +23,8 @@ import dash_bootstrap_components  as dbc
 from mainTracker import Tracker, vis_track, draw_lines, lines
 from flask_cloudflared import  run_with_cloudflared
 
+import plotly.io as pio
+
 dark = True
 # Use only for dark Themes rest acan stay the same 
 if dark:
