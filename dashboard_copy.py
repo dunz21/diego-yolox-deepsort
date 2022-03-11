@@ -29,7 +29,7 @@ from flask_cloudflared import  run_with_cloudflared
 server = Flask(__name__)
 run_with_cloudflared(server)
 # Init Dash App
-app = Dash(__name__, server = server, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = Dash(__name__, server = server, external_stylesheets=[dbc.themes.BOOTSTRAP,'https://fonts.googleapis.com/css2?family=Montserrat'])
 
 # Init Tracker
 tracker = Tracker(filter_classes= None, model = 'yolox-s', ckpt='weights/yolox_s.pth')
@@ -285,6 +285,99 @@ def update_visuals(n):
 
     #Updating the layout
     
+    
+    fig1.update_layout(font_family = "Montserrat", 
+        yaxis_title='',
+        title='Traffic per Minute',
+        hovermode="x",
+        xaxis=dict(rangeslider=dict(visible=False), showgrid= False,  zeroline =False, automargin=True,),
+        margin=dict(pad=20),
+        yaxis={
+            'autorange': True,
+            'showgrid':False,
+            'zeroline': False,
+            'automargin': True,
+        },
+        barmode='overlay',
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)'
+            )
+
+    fig2.update_layout(font_family = "Montserrat", 
+        yaxis_title='',
+        title='Cumulative Traffic',
+        hovermode="x",
+        xaxis=dict(rangeslider=dict(visible=False), showgrid= False,  zeroline =False, automargin=True,),
+        margin=dict(pad=20),
+        yaxis={
+            'autorange': True,
+            'showgrid':False,
+            'zeroline': False,
+            'automargin': True,
+        },
+        barmode='overlay',
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)'
+            )
+    speedfig.update_layout(font_family = "Montserrat", 
+        yaxis_title='',
+        title='Average Speed Flow by Vehicle Type',
+        hovermode="x",
+        xaxis=dict(rangeslider=dict(visible=False), showgrid= False,  zeroline =False, automargin=True,),
+        margin=dict(pad=20),
+        yaxis={
+            'autorange': True,
+            'showgrid':False,
+            'zeroline': False,
+            'automargin': True,
+        },
+        barmode='overlay',
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)'
+            )
+
+    dirfig.update_layout(font_family = "Montserrat", 
+        margin=dict(t=40, b=10, r=10, l=10),
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        xaxis=dict(showgrid= False,  zeroline =False),
+        yaxis={
+            'showgrid':False,
+            'zeroline': False
+        },     autosize=False,
+        showlegend=False,
+        )
+    piefig.update_traces(textposition='inside', textinfo='percent+label')
+    piefig.update_layout(font_family = "Montserrat", margin=dict(t=40, b=10, r=10, l=10),paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)',
+    
+        xaxis=dict(showgrid= False,  zeroline =False),
+        yaxis={
+            'showgrid':False,
+            'zeroline': False
+        },     autosize=False,
+        showlegend=False,
+
+    )
+    
+    sunfig.update_layout(font_family = "Montserrat",
+     title=  "Traffic Direction Flow",
+     margin=dict(t=30, b=10, r=60, l=10),paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)', xaxis=dict(showgrid= False, zeroline =False),
+        yaxis={
+            'showgrid':False,
+            'zeroline': False
+        },     autosize=False,
+
+    )
+    infig.update_layout(font_family = "Montserrat", margin=dict(t=30, b=10, r=10, l=10),paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)',
+        xaxis=dict(showgrid= False,  zeroline =False),
+        yaxis={
+            'showgrid':False,
+            'zeroline': False
+        },     autosize=False,
+
+    )
+
+
     return fig1, fig2 , cards, piefig, dirfig, sunfig, speedfig, infig
 
 
