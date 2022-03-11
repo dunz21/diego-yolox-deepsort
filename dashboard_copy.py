@@ -332,11 +332,11 @@ app.layout = html.Div([
     # Input for all the updating visuals
     dcc.Interval(id='visual-update',interval=2000,n_intervals = 0),
 
-    dbc.Row([header] ,style = {'padding-bottom':"20px", "padding-top":"20px"}), #Header
-    dbc.Row(id="cards", style = {'padding-bottom':"20px", "padding-top":"20px"}), #Cards
-    dbc.Row([videofeeds, figure1, figure2]), #VideoFeed and 2 Graphs
-    dbc.Row([piefig, sunfig ,dirfig]), #Header
-    dbc.Row([speedfig, infig]), #Header
+    dbc.Row([header] ,style = {'padding':"20px"}), #Header
+    dbc.Row(id="cards", style = {'padding':"20px"}), #Cards
+    dbc.Row([videofeeds, figure1, figure2],style = {'padding':"20px"}), #VideoFeed and 2 Graphs
+    dbc.Row([piefig, sunfig ,dirfig],style = {'padding':"20px"}), #Header
+    dbc.Row([speedfig, infig],style = {'padding':"20px"}), #Header
 
 ])
 
