@@ -312,8 +312,8 @@ def update_visuals(n):
     speedfig    = update_layout(figure=speedfig, margin=dict(pad=20), Title='Average Speed Flow by Vehicle Type')
     dirfig      = update_layout(figure=dirfig, margin=dict(t=40, b=10, r=10, l=10), Title="Average Speed Direction Flow")
     sunfig      = update_layout(figure=sunfig, margin=dict(t=30, b=10, r=60, l=10), Title="Traffic Direction Flow")
-    infig       = update_layout(figure=infig, margin=dict(t=40, b=10, r=10, l=10), Title="")
-    piefig      = update_layout(figure=piefig, margin=dict(t=30, b=10, r=60, l=10), Title="")
+    infig       = update_layout(figure=infig, margin=dict(t=40, b=10, r=10, l=10), Title="Average Speed Km/h")
+    piefig      = update_layout(figure=piefig, margin=dict(t=30, b=10, r=60, l=10), Title="Traffic Distribution - Vehicle Type")
     piefig.update_traces(textposition='inside', textinfo='percent+label')
     return fig1, fig2 , cards, piefig, dirfig, sunfig, speedfig, infig
 
