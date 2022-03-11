@@ -286,7 +286,7 @@ def update_visuals(n):
     #Updating the layout
     
     
-    fig.update_layout(font_family = "Montserrat", 
+    fig1.update_layout(font_family = "Montserrat", 
         yaxis_title='',
         title='Traffic per Minute',
         hovermode="x",
