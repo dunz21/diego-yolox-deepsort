@@ -175,7 +175,7 @@ header = dbc.Col( width = 10, children=[
                     'color': 'white;',
                             },children = [html.H1("Traffic Flow Management System", style = { 'text-align': 'center', 'font-size': '4.5rem',})
                             ]),
-             ]),
+             ])
 # Grpahical Components
 figure1 = dbc.Col([dcc.Graph(id="live-graph1")], width=4)
 figure2 = dbc.Col(dcc.Graph(id="live-graph2"), width=4)
