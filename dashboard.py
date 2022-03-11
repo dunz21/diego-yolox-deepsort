@@ -23,7 +23,11 @@ import dash_bootstrap_components  as dbc
 from mainTracker import Tracker, vis_track, draw_lines, lines
 from flask_cloudflared import  run_with_cloudflared
 
+import plotly.io as pio
 
+dark = True
+if dark:
+    pio.templates.default = "plotly_dark"
 
 # Init Flask Server
 server = Flask(__name__)
