@@ -29,7 +29,7 @@ from flask_cloudflared import  run_with_cloudflared
 server = Flask(__name__)
 run_with_cloudflared(server)
 # Init Dash App
-app = Dash(__name__, server = server, external_stylesheets=[dbc.themes.BOOTSTRAP, 'https://fonts.googleapis.com/css2?family=Montserrat'])
+app = Dash(__name__, server = server, external_stylesheets=[dbc.themes.VAPOR, 'https://fonts.googleapis.com/css2?family=Montserrat'])
 
 # Init Tracker
 tracker = Tracker(filter_classes= None, model = 'yolox-s', ckpt='weights/yolox_s.pth')
@@ -131,7 +131,7 @@ def create_card(Header, Value, cardcolor):
 
 
 # Video Feed Component
-videofeeds = dbc.Col(width=4, children =[
+videofeeds = dbc.Col(width=4, style = {'padding-top':'60px'},children =[
         html.Img(src = "/video_feed", style = {
             'max-width':'100%',
             'height':'auto',
@@ -141,7 +141,21 @@ videofeeds = dbc.Col(width=4, children =[
 
 # Header Component
 header = dbc.Col(width = 10,
-    children = [ html.H1("Traffic Flow Management", style = {'text-align':'center'})]
+   children = [
+       html.Header(style = {
+           'padding':'10px',
+           'text-align':'center',
+           'background':'#1abc9c',
+           'color':'white'
+       }, children = [ html.H1("Traffic Flow Management", style = {
+           'text-align':'center',
+           'font-size':'4.5rem',
+           'font-weight':'bold',
+           'font-family':"Montserrat"
+       })]
+
+       )
+   ]
 )
 
 # Grpahical Components
@@ -310,11 +324,11 @@ app.layout = html.Div([
     # Input for all the updating visuals
     dcc.Interval(id='visual-update',interval=2000,n_intervals = 0),
 
-    dbc.Row([header]), #Header
-    dbc.Row(id="cards"), #Cards
-    dbc.Row([videofeeds, figure1, figure2]), #VideoFeed and 2 Graphs
-    dbc.Row([piefig, sunfig ,dirfig]), #Header
-    dbc.Row([speedfig, infig]), #Header
+    dbc.Row([header], style = {"padding":"20px"}), #Header
+    dbc.Row(id="cards", style = {"padding":"20px"}), #Cards
+    dbc.Row([videofeeds, figure1, figure2], style = {"padding":"20px"}), #VideoFeed and 2 Graphs
+    dbc.Row([piefig, sunfig ,dirfig], style = {"padding":"20px"}), #Header
+    dbc.Row([speedfig, infig], style = {"padding":"20px"}), #Header
 
 ])
 
