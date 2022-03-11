@@ -143,7 +143,7 @@ def create_card(Header, Value, cardcolor):
 
 
 # Video Feed Component
-videofeeds = dbc.Col(width=4, children =[
+videofeeds = dbc.Col({'padding':"0px 0px 0px 10px", 'padding-top' : '60px' }, width=4, children =[
         html.Img(src = "/video_feed", style = {
             'max-width':'100%',
             'height':'auto',
@@ -314,7 +314,9 @@ def update_visuals(n):
     sunfig      = update_layout(figure=sunfig, margin=dict(t=30, b=10, r=60, l=10), Title="Traffic Direction Flow")
     infig       = update_layout(figure=infig, margin=dict(t=40, b=10, r=10, l=10), Title="Average Speed Km/h")
     piefig      = update_layout(figure=piefig, margin=dict(t=30, b=10, r=60, l=10), Title="Traffic Distribution - Vehicle Type")
+    
     piefig.update_traces(textposition='inside', textinfo='percent+label')
+
     return fig1, fig2 , cards, piefig, dirfig, sunfig, speedfig, infig
 
 
