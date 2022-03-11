@@ -160,20 +160,14 @@ videofeeds = dbc.Col(style = {'padding':"0px 0px 0px 10px", 'padding-top' : '60p
             'margin-right':'auto'})]) 
 
 # Header Component
-# header = dbc.Col( width = 10, children = [
-#     html.H1("Traffic Flow Management System", style = {
-#                                 'font-size': '4.5rem',
-#                                 'text-align': 'center',
-#                                 'color': 'white'}) 
-#                 ])
-                    
+
 header = dbc.Col( width = 10, children=[
                 html.Header(style = {
                     'padding': '10px 10px 10px 10px;',
                     'text-align': 'center;',
                     'background': '#1abc9c;',
                     'color': 'white;',
-                            },children = [html.H1("Traffic Flow Management System", style = { 'text-align': 'center', 'font-size': '4.5rem',})
+                            },children = [html.H1("Traffic Flow Management System", style = { 'text-align': 'center', 'font-size': '4.5rem'})
                             ]),
              ])
 # Grpahical Components
@@ -346,7 +340,7 @@ app.layout = html.Div([
     dcc.Interval(id='visual-update',interval=2000,n_intervals = 0),
 
     dbc.Row([header]), #Header
-    dbc.Row(id="cards"), #Cards
+    dbc.Row(id="cards", style = {'padding-bottom':"40px", "padding-top":"20px"}), #Cards
     dbc.Row([videofeeds, figure1, figure2]), #VideoFeed and 2 Graphs
     dbc.Row([piefig, sunfig ,dirfig]), #Header
     dbc.Row([speedfig, infig]), #Header
