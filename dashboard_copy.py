@@ -153,7 +153,12 @@ videofeeds = dbc.Col(style = {'padding':"0px 0px 0px 10px", 'padding-top' : '60p
 
 # Header Component
 header = dbc.Col(width = 10,
-    children = [ html.H1("Traffic Flow Management", style = {'text-align':'center'})]
+    children = [ html.H1("Traffic Flow Management",style = {
+                    'padding': '10px 10px 10px 10px;',
+                    'text-align': 'center;',
+                    'background': '#1abc9c;',
+                    'color': 'white;',
+                    'font-size': '30px;'})]
 )
 
 # Grpahical Components
