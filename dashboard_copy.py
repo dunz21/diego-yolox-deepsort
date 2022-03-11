@@ -69,7 +69,7 @@ def update_layout(figure, margin, Title):
     figure.update_layout(font_family = "Montserrat", 
         title=Title,
         xaxis={
-            'rangeslider':{'visible':False},
+            'autorange': True,
             'showgrid': False,
             'zeroline' :False,
             'automargin':True},
