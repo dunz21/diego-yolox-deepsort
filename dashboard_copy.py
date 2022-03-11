@@ -158,8 +158,7 @@ header = dbc.Col( width = 10, children=[
                     'text-align': 'center;',
                     'background': '#1abc9c;',
                     'color': 'white;',
-                    'font-size': '4.5rem','text-align': 'center'
-                            },children = [html.H1("Traffic Flow Management System")
+                            },children = [html.H1("Traffic Flow Management System", style = { 'font-size': '4.5rem','text-align': 'center'})
                             
                         ])
                     ])
