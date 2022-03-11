@@ -155,11 +155,8 @@ header = dbc.Col(width = 10,
            'text-align':'center',
            'font-size':'4.5rem',
            'font-weight':'bold',
-           'font-family':"Montserrat"
-       })]
-
-       )
-   ]
+           'font-family':"Montserrat"})]
+       )]
 )
 
 # Grpahical Components
