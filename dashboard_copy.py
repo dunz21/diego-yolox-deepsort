@@ -164,7 +164,6 @@ header = dbc.Col( width = 10, children = [
     html.H1("Traffic Flow Management System", style = {
                                 'font-size': '4.5rem',
                                 'text-align': 'center',
-                                'background': '#1abc9c',
                                 'color': 'white'}) 
                 ])
                     
