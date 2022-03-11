@@ -29,7 +29,7 @@ from flask_cloudflared import  run_with_cloudflared
 server = Flask(__name__)
 run_with_cloudflared(server)
 # Init Dash App
-app = Dash(__name__, server = server, external_stylesheets=[dbc.themes.BOOTSTRAP])
+app = Dash(__name__, server = server, external_stylesheets=[dbc.themes.BOOTSTRAP, 'https://fonts.googleapis.com/css2?family=Montserrat'])
 
 # Init Tracker
 tracker = Tracker(filter_classes= None, model = 'yolox-s', ckpt='weights/yolox_s.pth')
@@ -56,12 +56,17 @@ def build_hierarchical_dataframe(df, levels, value_column):
     df_all_trees = df_all_trees.append(total, ignore_index=True)
     return df_all_trees
 
-
 def update_layout(figure, title, margin):
     figure.update_layout(
-        
+        font_family = "Montserrat",
+        title = title,
+        margin=margin,
+        xaxis = {'autorange':True, 'showgrid':False, 'zeroline': False, 'automargin':True},
+        yaxis = {'autorange':True, 'showgrid':False, 'zeroline': False, 'automargin':True},
+        paper_bgcolor = 'rgba(0,0,0,0)',       
+        plot_bgcolor = 'rgba(0,0,0,0)'       
     )
-
+    return figure
 
 # -------------------------------------------------Getting Video Feeds ------------------------------#
 
@@ -289,6 +294,13 @@ def update_visuals(n):
 
 
     #Updating the layout
+    fig1        = update_layout(figure=fig1, title= 'Traffic per Minute', margin = dict(t=20, b=20, r=20, l=20))
+    fig2        = update_layout(figure=fig2, title='Cumulative Traffic', margin=dict(t=20, b=20, r=20, l=20))
+    speedfig    = update_layout(figure=speedfig, title='Average Speed Flow by Vehicle Type', margin=dict(t=20, b=20, r=20, l=20))
+    dirfig      = update_layout(figure=dirfig, title="Average Speed Direction Flow", margin=dict(t=40, b=10, r=10, l=10))
+    sunfig      = update_layout(figure=sunfig, title="Traffic Direction Flow", margin=dict(t=30, b=10, r=60, l=10))
+    infig       = update_layout(figure=infig, title="Average Speed Km/h", margin=dict(t=40, b=10, r=10, l=10))
+    piefig      = update_layout(figure=piefig, title="Traffic Distribution - Vehicle Type", margin=dict(t=30, b=10, r=60, l=10))
     
     return fig1, fig2 , cards, piefig, dirfig, sunfig, speedfig, infig
 
