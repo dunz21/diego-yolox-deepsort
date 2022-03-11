@@ -282,7 +282,60 @@ def update_visuals(n):
         )
     )
 
-     
+
+    #Updating the layout
+    
+    
+    fig.update_layout(font_family = "Montserrat", 
+        yaxis_title='',
+        title='Traffic per Minute',
+        hovermode="x",
+        xaxis=dict(rangeslider=dict(visible=False), showgrid= False,  zeroline =False, automargin=True,),
+        margin=dict(pad=20),
+        yaxis={
+            'autorange': True,
+            'showgrid':False,
+            'zeroline': False,
+            'automargin': True,
+        },
+        barmode='overlay',
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)'
+            )
+
+    fig2.update_layout(font_family = "Montserrat", 
+        yaxis_title='',
+        title='Cumulative Traffic',
+        hovermode="x",
+        xaxis=dict(rangeslider=dict(visible=False), showgrid= False,  zeroline =False, automargin=True,),
+        margin=dict(pad=20),
+        yaxis={
+            'autorange': True,
+            'showgrid':False,
+            'zeroline': False,
+            'automargin': True,
+        },
+        barmode='overlay',
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)'
+            )
+    speedfig.update_layout(font_family = "Montserrat", 
+        yaxis_title='',
+        title='Average Speed Flow by Vehicle Type',
+        hovermode="x",
+        xaxis=dict(rangeslider=dict(visible=False), showgrid= False,  zeroline =False, automargin=True,),
+        margin=dict(pad=20),
+        yaxis={
+            'autorange': True,
+            'showgrid':False,
+            'zeroline': False,
+            'automargin': True,
+        },
+        barmode='overlay',
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)'
+            )
+      
 
     return fig1, fig2 , cards, piefig, dirfig, sunfig, speedfig, infig
 
