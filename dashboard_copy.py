@@ -67,9 +67,7 @@ def build_hierarchical_dataframe(df, levels, value_column):
 
 def update_layout(figure, margin, Title):
     figure.update_layout(font_family = "Montserrat", 
-        yaxis_title='',
         title=Title,
-        hovermode="x",
         xaxis={
             'rangeslider':{'visible':False},
             'showgrid': False,
@@ -82,7 +80,6 @@ def update_layout(figure, margin, Title):
             'zeroline': False,
             'automargin': True,
         },
-        barmode='overlay',
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)'
             )
