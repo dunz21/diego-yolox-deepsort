@@ -152,16 +152,14 @@ videofeeds = dbc.Col(style = {'padding':"0px 0px 0px 10px", 'padding-top' : '60p
             'margin-right':'auto'})]) 
 
 # Header Component
-header = dbc.Col( width = 10, children=[
-                html.Header(style = {
-                    'padding': '10px 10px 10px 10px;',
-                    'text-align': 'center;',
-                    'background': '#1abc9c;',
-                    'color': 'white;',
-                            },children = [html.H1("Traffic Flow Management System", style = { 'font-size': '4.5rem','text-align': 'center'})
-                            
-                        ])
-                    ])
+header = dbc.Col( width = 10, children = [
+    html.H1("Traffic Flow Management System", style = {
+                                'font-size': '4.5rem',
+                                'text-align': 'center',
+                                'background': '#1abc9c;',
+                                'color': 'white;'}) 
+                ])
+                    
 
 # Grpahical Components
 figure1 = dbc.Col([dcc.Graph(id="live-graph1")], width=4)
