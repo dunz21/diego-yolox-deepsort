@@ -143,7 +143,7 @@ def create_card(Header, Value, cardcolor):
 
 
 # Video Feed Component
-videofeeds = dbc.Col({'padding':"0px 0px 0px 10px", 'padding-top' : '60px' }, width=4, children =[
+videofeeds = dbc.Col(style = {'padding':"0px 0px 0px 10px", 'padding-top' : '60px' }, width=4, children =[
         html.Img(src = "/video_feed", style = {
             'max-width':'100%',
             'height':'auto',
