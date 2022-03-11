@@ -23,13 +23,19 @@ import dash_bootstrap_components  as dbc
 from mainTracker import Tracker, vis_track, draw_lines, lines
 from flask_cloudflared import  run_with_cloudflared
 
+dark = True
+# Use only for dark Themes rest acan stay the same 
+if dark:
+    pio.templates.default = "plotly_dark"
+
+
 
 
 # Init Flask Server
 server = Flask(__name__)
 run_with_cloudflared(server)
 # Init Dash App
-app = Dash(__name__, server = server, external_stylesheets=[dbc.themes.BOOTSTRAP,'https://fonts.googleapis.com/css2?family=Montserrat'])
+app = Dash(__name__, server = server, external_stylesheets=[dbc.themes.VAPOR,'https://fonts.googleapis.com/css2?family=Montserrat'])
 
 # Init Tracker
 tracker = Tracker(filter_classes= None, model = 'yolox-s', ckpt='weights/yolox_s.pth')
@@ -156,8 +162,8 @@ header = dbc.Col( width = 10, children = [
     html.H1("Traffic Flow Management System", style = {
                                 'font-size': '4.5rem',
                                 'text-align': 'center',
-                                'background': '#1abc9c;',
-                                'color': 'white;'}) 
+                                'background': '#1abc9c',
+                                'color': 'white'}) 
                 ])
                     
 
