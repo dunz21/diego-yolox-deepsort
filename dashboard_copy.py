@@ -66,23 +66,15 @@ def build_hierarchical_dataframe(df, levels, value_column):
 
 
 def update_layout(figure, margin, Title):
-    figure.update_layout(font_family = "Montserrat", 
+    figure.update_layout(
+        font_family = "Montserrat", 
         title=Title,
-        xaxis={
-            'autorange': True,
-            'showgrid': False,
-            'zeroline' :False,
-            'automargin':True},
         margin=margin,
-        yaxis={
-            'autorange': True,
-            'showgrid':False,
-            'zeroline': False,
-            'automargin': True,
-        },
+        xaxis={'autorange': True, 'showgrid': False, 'zeroline' :False,'automargin':True},
+        yaxis={'autorange': True, 'showgrid': False, 'zeroline' :False,'automargin':True},
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)'
-            )
+    )
     return figure
 
 # -------------------------------------------------Getting Video Feeds ------------------------------#

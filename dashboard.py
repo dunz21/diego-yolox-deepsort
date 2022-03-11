@@ -57,6 +57,11 @@ def build_hierarchical_dataframe(df, levels, value_column):
     return df_all_trees
 
 
+def update_layout(figure, title, margin):
+    figure.update_layout(
+        
+    )
+
 
 # -------------------------------------------------Getting Video Feeds ------------------------------#
 
