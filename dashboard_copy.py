@@ -57,6 +57,28 @@ def build_hierarchical_dataframe(df, levels, value_column):
     return df_all_trees
 
 
+def update_layout(figure, margin, Title):
+    figure.update_layout(font_family = "Montserrat", 
+        yaxis_title='',
+        title=Title,
+        hovermode="x",
+        xaxis={
+            'rangeslider':{'visible':False},
+            'showgrid': False,
+            'zeroline' :False,
+            'automargin':True},
+        margin=margin,
+        yaxis={
+            'autorange': True,
+            'showgrid':False,
+            'zeroline': False,
+            'automargin': True,
+        },
+        barmode='overlay',
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)'
+            )
+    return figure
 
 # -------------------------------------------------Getting Video Feeds ------------------------------#
 
@@ -285,99 +307,14 @@ def update_visuals(n):
 
     #Updating the layout
     
-    
-    fig1.update_layout(font_family = "Montserrat", 
-        yaxis_title='',
-        title='Traffic per Minute',
-        hovermode="x",
-        xaxis=dict(rangeslider=dict(visible=False), showgrid= False,  zeroline =False, automargin=True,),
-        margin=dict(pad=20),
-        yaxis={
-            'autorange': True,
-            'showgrid':False,
-            'zeroline': False,
-            'automargin': True,
-        },
-        barmode='overlay',
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)'
-            )
-
-    fig2.update_layout(font_family = "Montserrat", 
-        yaxis_title='',
-        title='Cumulative Traffic',
-        hovermode="x",
-        xaxis=dict(rangeslider=dict(visible=False), showgrid= False,  zeroline =False, automargin=True,),
-        margin=dict(pad=20),
-        yaxis={
-            'autorange': True,
-            'showgrid':False,
-            'zeroline': False,
-            'automargin': True,
-        },
-        barmode='overlay',
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)'
-            )
-    speedfig.update_layout(font_family = "Montserrat", 
-        yaxis_title='',
-        title='Average Speed Flow by Vehicle Type',
-        hovermode="x",
-        xaxis=dict(rangeslider=dict(visible=False), showgrid= False,  zeroline =False, automargin=True,),
-        margin=dict(pad=20),
-        yaxis={
-            'autorange': True,
-            'showgrid':False,
-            'zeroline': False,
-            'automargin': True,
-        },
-        barmode='overlay',
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)'
-            )
-
-    dirfig.update_layout(font_family = "Montserrat", 
-        margin=dict(t=40, b=10, r=10, l=10),
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)',
-        xaxis=dict(showgrid= False,  zeroline =False),
-        yaxis={
-            'showgrid':False,
-            'zeroline': False
-        },     autosize=False,
-        showlegend=False,
-        )
+    fig1        = update_layout(figure=fig1, margin=dict(pad=20), Title='Traffic per Minute')
+    fig2        = update_layout(figure=fig2, margin=dict(pad=20), Title='Cumulative Traffic')
+    speedfig    = update_layout(figure=speedfig, margin=dict(pad=20), Title='Average Speed Flow by Vehicle Type')
+    dirfig      = update_layout(figure=dirfig, margin=dict(t=40, b=10, r=10, l=10), Title="Average Speed Direction Flow")
+    sunfig      = update_layout(figure=sunfig, margin=dict(t=30, b=10, r=60, l=10), Title="Traffic Direction Flow")
+    infig       = update_layout(figure=infig, margin=dict(t=40, b=10, r=10, l=10), Title="")
+    piefig      = update_layout(figure=piefig, margin=dict(t=30, b=10, r=60, l=10), Title="")
     piefig.update_traces(textposition='inside', textinfo='percent+label')
-    piefig.update_layout(font_family = "Montserrat", margin=dict(t=40, b=10, r=10, l=10),paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)',
-    
-        xaxis=dict(showgrid= False,  zeroline =False),
-        yaxis={
-            'showgrid':False,
-            'zeroline': False
-        },     autosize=False,
-        showlegend=False,
-
-    )
-    
-    sunfig.update_layout(font_family = "Montserrat",
-     title=  "Traffic Direction Flow",
-     margin=dict(t=30, b=10, r=60, l=10),paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)', xaxis=dict(showgrid= False, zeroline =False),
-        yaxis={
-            'showgrid':False,
-            'zeroline': False
-        },     autosize=False,
-
-    )
-    infig.update_layout(font_family = "Montserrat", margin=dict(t=30, b=10, r=10, l=10),paper_bgcolor='rgba(0,0,0,0)',plot_bgcolor='rgba(0,0,0,0)',
-        xaxis=dict(showgrid= False,  zeroline =False),
-        yaxis={
-            'showgrid':False,
-            'zeroline': False
-        },     autosize=False,
-
-    )
-
-
     return fig1, fig2 , cards, piefig, dirfig, sunfig, speedfig, infig
 
 
