@@ -185,6 +185,7 @@ def update_visuals(n):
     vehicleslastminute = 0
     vehiclestotal = 0
     df = pd.DataFrame(Main)
+
     if len(df) !=0:        
         df1 = df.copy()
         df1['count'] = 1
@@ -242,14 +243,13 @@ def update_visuals(n):
         )
 
         sunfig = go.FigureWidget(go.Sunburst(
-        labels = df_all_trees['id'],
-        parents = df_all_trees['parent'],
-        values = df_all_trees['value'],
-        branchvalues = 'total',
-        textinfo = 'label+percent entry',
-        opacity = 0.85
-    )
-    )
+            labels = df_all_trees['id'],
+            parents = df_all_trees['parent'],
+            values = df_all_trees['value'],
+            branchvalues = 'total',
+            textinfo = 'label+percent entry',
+            opacity = 0.85
+        ))
 
     cards = [
         create_card(Header = "Vehicles This Minute", Value = vehicleslastminute, cardcolor = "primary"),
