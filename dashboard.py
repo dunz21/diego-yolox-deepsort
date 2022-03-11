@@ -147,15 +147,15 @@ videofeeds = dbc.Col(width=4, style = {'padding-top':'60px'},children =[
 header = dbc.Col(width = 10,
    children = [
        html.Header(style = {
-           'padding':'10px',
-           'text-align':'center',
-           'background':'#1abc9c',
-           'color':'white'
+           'padding':'10px;',
+           'text-align':'center;',
+           'background':'#1abc9c;',
+           'color':'white;'
        }, children = [ html.H1("Traffic Flow Management", style = {
-           'text-align':'center',
-           'font-size':'4.5rem',
-           'font-weight':'bold',
-           'font-family':"Montserrat"})]
+           'text-align':'center;',
+           'font-size':'4.5rem;',
+           'font-weight':'bold;',
+           'font-family':"Montserrat;"})]
        )]
 )
 
