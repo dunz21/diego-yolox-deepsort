@@ -158,6 +158,7 @@ def time_synchronized():
     torch.cuda.synchronize() if torch.cuda.is_available() else None
     return time.time()
 
+
 # Draw the boxes having tracking indentities 
 def draw_boxes(img, bbox, object_id, identities=None, offset=(0, 0)):
     height, width, _ = img.shape 
@@ -189,10 +190,8 @@ def draw_boxes(img, bbox, object_id, identities=None, offset=(0, 0)):
             speed = speed_dict[id]
         else:
             speed = ''
-        
         UI_box(box, img, label=label + str(speed) + 'km/h', color=color, line_thickness=3, boundingbox=True)
-        
-
+    
     return img, frame_data
 
 # Tracking class to integrate Deepsort tracking with our detector
@@ -231,9 +230,10 @@ class Tracker():
                 bbox_xyxy =outputs[:, :4]
                 identities =outputs[:, -2]
                 object_id =outputs[:, -1]
-                image, frame_data = draw_boxes(image, bbox_xyxy, object_id,identities)
+                image, data = draw_boxes(image, bbox_xyxy, object_id,identities)
             else:
-                frame_data = []
+                data = []
+            return image, outputs, data
 
-            return image, outputs, frame_data
+
 
