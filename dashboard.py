@@ -169,6 +169,54 @@ sunfig = dbc.Col(dcc.Graph(id="sunfig"), width=4)
 speedfig = dbc.Col(dcc.Graph(id="speedfig"), width=8)
 infig = dbc.Col(dcc.Graph(id="infig"), width=4)
 
+dropdown = dbc.Form(
+    [
+        html.H6("Detection Model Selected :: YOLOX S", id = "model-dropdown-head"),
+        dbc.DropdownMenu(
+            label="YOLOX S",
+            id = 'model-dropdown',
+            menu_variant="dark",
+            children=[
+                dbc.DropdownMenuItem("YOLOX S", id = "yolox_s" ),
+                dbc.DropdownMenuItem(divider=True),
+                dbc.DropdownMenuItem("YOLOX M", id = "yolox_m" ),
+                dbc.DropdownMenuItem(divider=True),
+                dbc.DropdownMenuItem("YOLOX L", id = "yolox_l" ),
+
+            ],
+        )
+    ]
+)
+
+dropdown2 = dbc.Form(
+    [
+        html.H6("Video Stream Selected :: Stream 1", id = "stream-dropdown-head"),
+        dbc.DropdownMenu(
+            label="Stream 1",
+            id = 'stream-dropdown',
+            menu_variant="dark",
+            children=[
+                dbc.DropdownMenuItem("Stream 1", id = "Stream 1" ),
+                dbc.DropdownMenuItem(divider=True),
+                dbc.DropdownMenuItem("Stream 2", id = "Stream 2" ),
+                dbc.DropdownMenuItem(divider=True),
+                dbc.DropdownMenuItem("Stream 3", id = "Stream 3" ),
+
+            ],
+        )
+    ], style = {'padding-top':'30px'}
+)
+
+
+slider = dbc.Form(
+    [
+        dbc.Label("Confidence", html_for="slider"),
+        dcc.Slider(id="slider", min=0, max=1, step=0.05, value=3, tooltip={"placement": "top", "always_visible": True}, className = "sl"),
+    ], style = {'padding-top':'40px'}
+)
+form = dbc.Form([dropdown, dbc.DropdownMenuItem(divider=True), slider,dbc.DropdownMenuItem(divider=True), dropdown2,dbc.DropdownMenuItem(divider=True)])
+
+
 offcanvas = html.Div( children =   [dbc.Button([html.I(className="bi bi-list"), ""],
             id="open-offcanvas-scrollable",
             n_clicks=0,
