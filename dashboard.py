@@ -33,7 +33,7 @@ if dark:
 server = Flask(__name__)
 run_with_cloudflared(server)
 # Init Dash App
-app = Dash(__name__, server = server, external_stylesheets=[dbc.themes.VAPOR, 'https://fonts.googleapis.com/css2?family=Montserrat'])
+app = Dash(__name__, server = server, external_stylesheets=[dbc.themes.VAPOR, dbc.icons.BOOTSTRAP,'https://fonts.googleapis.com/css2?family=Montserrat'])
 
 # Init Tracker
 tracker = Tracker(filter_classes= None, model = 'yolox-s', ckpt='weights/yolox_s.pth')
@@ -169,6 +169,45 @@ sunfig = dbc.Col(dcc.Graph(id="sunfig"), width=4)
 speedfig = dbc.Col(dcc.Graph(id="speedfig"), width=8)
 infig = dbc.Col(dcc.Graph(id="infig"), width=4)
 
+offcanvas = html.Div( children =   [dbc.Button([html.I(className="bi bi-list"), ""],
+            id="open-offcanvas-scrollable",
+            n_clicks=0,
+             color="danger",
+             outline=True,
+             size="lg"
+        ),
+        dbc.Offcanvas(
+            
+            children = [
+                        html.H2("Configuration Menu", style = {"padding-bottom" : "60px"}),
+                        form
+                    ],
+            id="offcanvas-scrollable",
+            scrollable=True,
+            
+            placement = "end",
+            close_button= False,
+            keyboard=True,
+            is_open=False,
+            style = {
+                'background-color': 'rgba(20,20,20,0.9)',
+                'width': '550px',
+                'padding' : "20px 40px 20px 40px"
+
+            }
+        ),
+    ]
+)
+
+@app.callback(
+    Output("offcanvas-scrollable", "is_open"),
+    Input("open-offcanvas-scrollable", "n_clicks"),
+    State("offcanvas-scrollable", "is_open"),
+)
+def toggle_offcanvas_scrollable(n1, is_open):
+    if n1:
+        return not is_open
+    return is_open
 
 
 fps = 0
