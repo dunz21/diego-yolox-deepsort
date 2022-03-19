@@ -31,7 +31,7 @@ if dark:
 
 # Init Flask Server
 server = Flask(__name__)
-run_with_cloudflared(server)
+# run_with_cloudflared(server)
 # Init Dash App
 app = Dash(__name__, server = server, external_stylesheets=[dbc.themes.VAPOR, dbc.icons.BOOTSTRAP,'https://fonts.googleapis.com/css2?family=Montserrat'])
 
