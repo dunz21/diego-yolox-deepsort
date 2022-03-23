@@ -13,7 +13,7 @@ from flask import Flask, Response
 
 # Plotly-Dash Imports 
 
-from dash import Dash, html, dcc, Input, Output
+from dash import Dash, html, dcc, Input, Output, State
 import plotly.graph_objects as go
 import plotly.express as px
 
@@ -21,23 +21,19 @@ from flask import Flask
 import dash_bootstrap_components  as dbc
 
 from mainTracker import Tracker, vis_track, draw_lines, lines
-from flask_cloudflared import  run_with_cloudflared
+# from flask_cloudflared import  run_with_cloudflared
 
 import plotly.io as pio
 
 dark = True
-# Use only for dark Themes rest acan stay the same 
 if dark:
     pio.templates.default = "plotly_dark"
 
-
-
-
 # Init Flask Server
 server = Flask(__name__)
-run_with_cloudflared(server)
+# run_with_cloudflared(server)
 # Init Dash App
-app = Dash(__name__, server = server, external_stylesheets=[dbc.themes.VAPOR,'https://fonts.googleapis.com/css2?family=Montserrat'])
+app = Dash(__name__, server = server, external_stylesheets=[dbc.themes.VAPOR, dbc.icons.BOOTSTRAP,'https://fonts.googleapis.com/css2?family=Montserrat'])
 
 # Init Tracker
 tracker = Tracker(filter_classes= None, model = 'yolox-s', ckpt='weights/yolox_s.pth')
@@ -64,16 +60,15 @@ def build_hierarchical_dataframe(df, levels, value_column):
     df_all_trees = df_all_trees.append(total, ignore_index=True)
     return df_all_trees
 
-
-def update_layout(figure, margin, Title):
+def update_layout(figure, title, margin):
     figure.update_layout(
-        font_family = "Montserrat", 
-        title=Title,
+        font_family = "Montserrat",
+        title = title,
         margin=margin,
-        xaxis={'autorange': True, 'showgrid': False, 'zeroline' :False,'automargin':True},
-        yaxis={'autorange': True, 'showgrid': False, 'zeroline' :False,'automargin':True},
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)'
+        xaxis = {'autorange':True, 'showgrid':False, 'zeroline': False, 'automargin':True},
+        yaxis = {'autorange':True, 'showgrid':False, 'zeroline': False, 'automargin':True},
+        paper_bgcolor = 'rgba(0,0,0,0)',       
+        plot_bgcolor = 'rgba(0,0,0,0)'       
     )
     return figure
 
@@ -140,7 +135,7 @@ def create_card(Header, Value, cardcolor):
 
 
 # Video Feed Component
-videofeeds = dbc.Col(style = {'padding-top':"60px"}, width=4, children =[
+videofeeds = dbc.Col(width=4, style = {'padding-top':'60px'},children =[
         html.Img(src = "/video_feed", style = {
             'max-width':'100%',
             'height':'auto',
@@ -149,20 +144,22 @@ videofeeds = dbc.Col(style = {'padding-top':"60px"}, width=4, children =[
             'margin-right':'auto'})]) 
 
 # Header Component
+header = dbc.Col(width = 10,
+   children = [
+       html.Header(style = {
+           'padding':'10px',
+           'text-align':'center',
+           'background':'#1abc9c;',
+           'color':'white;'
+           
+       }, children = [ html.H1("Traffic Flow Management", style = {
+           'text-align':'center',
+           'font-size':'4.5rem',
+           'font-weight':'bold',
+           'font-family':"Montserrat"})]
+       )]
+)
 
-header = dbc.Col( width = 10, children=[
-                html.Header(style = {
-                    'padding': '10px',
-                    'text-align': 'center;',
-                    'background': '#1abc9c;',
-                    'color': 'white;',
-                            },children = [html.H1("Traffic Flow Management System", style = { 
-                                'text-align': 'center', 
-                                'font-size': '4.5rem',
-                                'font-weight':'bold',
-                                'font-family':"Montserrat"})
-                            ]),
-             ])
 # Grpahical Components
 figure1 = dbc.Col([dcc.Graph(id="live-graph1")], width=4)
 figure2 = dbc.Col(dcc.Graph(id="live-graph2"), width=4)
@@ -172,6 +169,94 @@ sunfig = dbc.Col(dcc.Graph(id="sunfig"), width=4)
 speedfig = dbc.Col(dcc.Graph(id="speedfig"), width=8)
 infig = dbc.Col(dcc.Graph(id="infig"), width=4)
 
+dropdown = dbc.Form(
+    [
+        html.H6("Detection Model Selected :: YOLOX S", id = "model-dropdown-head"),
+        dbc.DropdownMenu(
+            label="YOLOX S",
+            id = 'model-dropdown',
+            menu_variant="dark",
+            children=[
+                dbc.DropdownMenuItem("YOLOX S", id = "yolox_s" ),
+                dbc.DropdownMenuItem(divider=True),
+                dbc.DropdownMenuItem("YOLOX M", id = "yolox_m" ),
+                dbc.DropdownMenuItem(divider=True),
+                dbc.DropdownMenuItem("YOLOX L", id = "yolox_l" ),
+
+            ],
+        )
+    ]
+)
+
+# dropdown2 = dbc.Form(
+#     [
+#         html.H6("Video Stream Selected :: Stream 1", id = "stream-dropdown-head"),
+#         dbc.DropdownMenu(
+#             label="Stream 1",
+#             id = 'stream-dropdown',
+#             menu_variant="dark",
+#             children=[
+#                 dbc.DropdownMenuItem("Stream 1", id = "Stream 1" ),
+#                 dbc.DropdownMenuItem(divider=True),
+#                 dbc.DropdownMenuItem("Stream 2", id = "Stream 2" ),
+#                 dbc.DropdownMenuItem(divider=True),
+#                 dbc.DropdownMenuItem("Stream 3", id = "Stream 3" ),
+
+#             ],
+#         )
+#     ], style = {'padding-top':'30px'}
+# )
+
+
+slider = dbc.Form(
+    [
+        dbc.Label("Confidence", html_for="slider"),
+        dcc.Slider(id="slider", min=0, max=1, step=0.05, value=3, tooltip={"placement": "top", "always_visible": True}, className = "sl"),
+    ], style = {'padding-top':'40px'}
+)
+
+form = dbc.Form([dropdown, dbc.DropdownMenuItem(divider=True), slider,dbc.DropdownMenuItem(divider=True)])
+
+
+offcanvas = html.Div( children =   [dbc.Button([html.I(className="bi bi-list"), ""],
+            id="open-offcanvas-scrollable",
+            n_clicks=0,
+             color="danger",
+             outline=True,
+             size="lg"
+        ),
+        dbc.Offcanvas(
+            
+            children = [
+                        html.H2("Configuration Menu", style = {"padding-bottom" : "60px"}),
+                        form
+                    ],
+            id="offcanvas-scrollable",
+            scrollable=True,
+            
+            placement = "end",
+            close_button= False,
+            keyboard=True,
+            is_open=False,
+            style = {
+                'background-color': 'rgba(20,20,20,0.9)',
+                'width': '550px',
+                'padding' : "20px 40px 20px 40px"
+
+            }
+        ),
+    ]
+)
+
+@app.callback(
+    Output("offcanvas-scrollable", "is_open"),
+    Input("open-offcanvas-scrollable", "n_clicks"),
+    State("offcanvas-scrollable", "is_open"),
+)
+def toggle_offcanvas_scrollable(n1, is_open):
+    if n1:
+        return not is_open
+    return is_open
 
 
 fps = 0
@@ -313,17 +398,14 @@ def update_visuals(n):
 
 
     #Updating the layout
+    fig1        = update_layout(figure=fig1, title= 'Traffic per Minute', margin = dict(t=20, b=20, r=20, l=20))
+    fig2        = update_layout(figure=fig2, title='Cumulative Traffic', margin=dict(t=20, b=20, r=20, l=20))
+    speedfig    = update_layout(figure=speedfig, title='Average Speed Flow by Vehicle Type', margin=dict(t=20, b=20, r=20, l=20))
+    dirfig      = update_layout(figure=dirfig, title="Average Speed Direction Flow", margin=dict(t=40, b=10, r=10, l=10))
+    sunfig      = update_layout(figure=sunfig, title="Traffic Direction Flow", margin=dict(t=30, b=10, r=60, l=10))
+    infig       = update_layout(figure=infig, title="Average Speed Km/h", margin=dict(t=40, b=10, r=10, l=10))
+    piefig      = update_layout(figure=piefig, title="Traffic Distribution - Vehicle Type", margin=dict(t=30, b=10, r=60, l=10))
     
-    fig1        = update_layout(figure=fig1, margin=dict(pad=20), Title='Traffic per Minute')
-    fig2        = update_layout(figure=fig2, margin=dict(pad=20), Title='Cumulative Traffic')
-    speedfig    = update_layout(figure=speedfig, margin=dict(pad=20), Title='Average Speed Flow by Vehicle Type')
-    dirfig      = update_layout(figure=dirfig, margin=dict(t=40, b=10, r=10, l=10), Title="Average Speed Direction Flow")
-    sunfig      = update_layout(figure=sunfig, margin=dict(t=30, b=10, r=60, l=10), Title="Traffic Direction Flow")
-    infig       = update_layout(figure=infig, margin=dict(t=40, b=10, r=10, l=10), Title="Average Speed Km/h")
-    piefig      = update_layout(figure=piefig, margin=dict(t=30, b=10, r=60, l=10), Title="Traffic Distribution - Vehicle Type")
-    
-    piefig.update_traces(textposition='inside', textinfo='percent+label')
-
     return fig1, fig2 , cards, piefig, dirfig, sunfig, speedfig, infig
 
 
@@ -332,11 +414,11 @@ app.layout = html.Div([
     # Input for all the updating visuals
     dcc.Interval(id='visual-update',interval=2000,n_intervals = 0),
 
-    dbc.Row([header] ,style = {'padding':"20px"}), #Header
-    dbc.Row(id="cards", style = {'padding':"20px"}), #Cards
-    dbc.Row([videofeeds, figure1, figure2],style = {'padding':"20px"}), #VideoFeed and 2 Graphs
-    dbc.Row([piefig, sunfig ,dirfig],style = {'padding':"20px"}), #Header
-    dbc.Row([speedfig, infig],style = {'padding':"20px"}), #Header
+    dbc.Row([header,dbc.Col(children = [offcanvas])], style = {"padding":"20px"}), #Header
+    dbc.Row(id="cards", style = {"padding":"20px"}), #Cards
+    dbc.Row([videofeeds, figure1, figure2], style = {"padding":"20px"}), #VideoFeed and 2 Graphs
+    dbc.Row([piefig, sunfig ,dirfig], style = {"padding":"20px"}), #Header
+    dbc.Row([speedfig, infig], style = {"padding":"20px"}), #Header
 
 ])
 

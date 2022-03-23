@@ -13,7 +13,7 @@ from flask import Flask, Response
 
 # Plotly-Dash Imports 
 
-from dash import Dash, html, dcc, Input, Output, State
+from dash import Dash, html, dcc, Input, Output
 import plotly.graph_objects as go
 import plotly.express as px
 
@@ -21,7 +21,7 @@ from flask import Flask
 import dash_bootstrap_components  as dbc
 
 from mainTracker import Tracker, vis_track, draw_lines, lines
-# from flask_cloudflared import  run_with_cloudflared
+from flask_cloudflared import  run_with_cloudflared
 
 import plotly.io as pio
 
@@ -31,9 +31,9 @@ if dark:
 
 # Init Flask Server
 server = Flask(__name__)
-# run_with_cloudflared(server)
+run_with_cloudflared(server)
 # Init Dash App
-app = Dash(__name__, server = server, external_stylesheets=[dbc.themes.VAPOR, dbc.icons.BOOTSTRAP,'https://fonts.googleapis.com/css2?family=Montserrat'])
+app = Dash(__name__, server = server, external_stylesheets=[dbc.themes.VAPOR, 'https://fonts.googleapis.com/css2?family=Montserrat'])
 
 # Init Tracker
 tracker = Tracker(filter_classes= None, model = 'yolox-s', ckpt='weights/yolox_s.pth')
@@ -169,93 +169,6 @@ sunfig = dbc.Col(dcc.Graph(id="sunfig"), width=4)
 speedfig = dbc.Col(dcc.Graph(id="speedfig"), width=8)
 infig = dbc.Col(dcc.Graph(id="infig"), width=4)
 
-dropdown = dbc.Form(
-    [
-        html.H6("Detection Model Selected :: YOLOX S", id = "model-dropdown-head"),
-        dbc.DropdownMenu(
-            label="YOLOX S",
-            id = 'model-dropdown',
-            menu_variant="dark",
-            children=[
-                dbc.DropdownMenuItem("YOLOX S", id = "yolox_s" ),
-                dbc.DropdownMenuItem(divider=True),
-                dbc.DropdownMenuItem("YOLOX M", id = "yolox_m" ),
-                dbc.DropdownMenuItem(divider=True),
-                dbc.DropdownMenuItem("YOLOX L", id = "yolox_l" ),
-
-            ],
-        )
-    ]
-)
-
-dropdown2 = dbc.Form(
-    [
-        html.H6("Video Stream Selected :: Stream 1", id = "stream-dropdown-head"),
-        dbc.DropdownMenu(
-            label="Stream 1",
-            id = 'stream-dropdown',
-            menu_variant="dark",
-            children=[
-                dbc.DropdownMenuItem("Stream 1", id = "Stream 1" ),
-                dbc.DropdownMenuItem(divider=True),
-                dbc.DropdownMenuItem("Stream 2", id = "Stream 2" ),
-                dbc.DropdownMenuItem(divider=True),
-                dbc.DropdownMenuItem("Stream 3", id = "Stream 3" ),
-
-            ],
-        )
-    ], style = {'padding-top':'30px'}
-)
-
-
-slider = dbc.Form(
-    [
-        dbc.Label("Confidence", html_for="slider"),
-        dcc.Slider(id="slider", min=0, max=1, step=0.05, value=3, tooltip={"placement": "top", "always_visible": True}, className = "sl"),
-    ], style = {'padding-top':'40px'}
-)
-form = dbc.Form([dropdown, dbc.DropdownMenuItem(divider=True), slider,dbc.DropdownMenuItem(divider=True), dropdown2,dbc.DropdownMenuItem(divider=True)])
-
-
-offcanvas = html.Div( children =   [dbc.Button([html.I(className="bi bi-list"), ""],
-            id="open-offcanvas-scrollable",
-            n_clicks=0,
-             color="danger",
-             outline=True,
-             size="lg"
-        ),
-        dbc.Offcanvas(
-            
-            children = [
-                        html.H2("Configuration Menu", style = {"padding-bottom" : "60px"}),
-                        form
-                    ],
-            id="offcanvas-scrollable",
-            scrollable=True,
-            
-            placement = "end",
-            close_button= False,
-            keyboard=True,
-            is_open=False,
-            style = {
-                'background-color': 'rgba(20,20,20,0.9)',
-                'width': '550px',
-                'padding' : "20px 40px 20px 40px"
-
-            }
-        ),
-    ]
-)
-
-@app.callback(
-    Output("offcanvas-scrollable", "is_open"),
-    Input("open-offcanvas-scrollable", "n_clicks"),
-    State("offcanvas-scrollable", "is_open"),
-)
-def toggle_offcanvas_scrollable(n1, is_open):
-    if n1:
-        return not is_open
-    return is_open
 
 
 fps = 0
@@ -413,7 +326,7 @@ app.layout = html.Div([
     # Input for all the updating visuals
     dcc.Interval(id='visual-update',interval=2000,n_intervals = 0),
 
-    dbc.Row([header,dbc.Col(children = [offcanvas])], style = {"padding":"20px"}), #Header
+    dbc.Row([header], style = {"padding":"20px"}), #Header
     dbc.Row(id="cards", style = {"padding":"20px"}), #Cards
     dbc.Row([videofeeds, figure1, figure2], style = {"padding":"20px"}), #VideoFeed and 2 Graphs
     dbc.Row([piefig, sunfig ,dirfig], style = {"padding":"20px"}), #Header
