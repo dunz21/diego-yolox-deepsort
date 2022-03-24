@@ -9,7 +9,9 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 
-app = dash.Dash()
+
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.VAPOR, dbc.icons.BOOTSTRAP,'https://fonts.googleapis.com/css2?family=Montserrat'])
+
 inputs = dbc.Form([
     ## hide these 2 inputs if file is uploaded
 
@@ -20,7 +22,8 @@ inputs = dbc.Form([
 
     ## run button
     html.Br(),html.Br(),
-    dbc.Col(dbc.Button("run", id="run", color="primary"))
+    dbc.Col(html.A(dbc.Button("run", id="run", color="primary"))),
+    
 ])
 
 
@@ -28,7 +31,9 @@ inputs = dbc.Form([
               inputs=[Input(component_id="run", component_property="n_clicks")],
               state=[State("n-iter","value")])
 def results(n_clicks, n_iter):
+    global app;
     print(n_iter)
+    app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP, dbc.icons.BOOTSTRAP,'https://fonts.googleapis.com/css2?family=Montserrat'])
     return [str(n_iter)]
     
 

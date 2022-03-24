@@ -39,6 +39,12 @@ app = Dash(__name__, server = server, external_stylesheets=[dbc.themes.VAPOR, db
 tracker = Tracker(filter_classes= None, model = 'yolox-s', ckpt='weights/yolox_s.pth')
 
 Main = []
+modelmapping = {
+    'YOLOX S' : {'Name' : 'yolox-s', 'path' : 'weights/yolox_s.pth'},
+    'YOLOX M' : {'Name' : 'yolox-m', 'path' : 'weights/yolox_m.pth'},
+    'YOLOX L' : {'Name' : 'yolox-l', 'path' : 'weights/yolox_l.pth'},
+}
+
 
 # Sunburst Data Function
 def build_hierarchical_dataframe(df, levels, value_column):
@@ -188,25 +194,6 @@ dropdown = dbc.Form(
     ]
 )
 
-# dropdown2 = dbc.Form(
-#     [
-#         html.H6("Video Stream Selected :: Stream 1", id = "stream-dropdown-head"),
-#         dbc.DropdownMenu(
-#             label="Stream 1",
-#             id = 'stream-dropdown',
-#             menu_variant="dark",
-#             children=[
-#                 dbc.DropdownMenuItem("Stream 1", id = "Stream 1" ),
-#                 dbc.DropdownMenuItem(divider=True),
-#                 dbc.DropdownMenuItem("Stream 2", id = "Stream 2" ),
-#                 dbc.DropdownMenuItem(divider=True),
-#                 dbc.DropdownMenuItem("Stream 3", id = "Stream 3" ),
-
-#             ],
-#         )
-#     ], style = {'padding-top':'30px'}
-# )
-
 
 slider = dbc.Form(
     [
@@ -215,7 +202,7 @@ slider = dbc.Form(
     ], style = {'padding-top':'40px'}
 )
 
-form = dbc.Form([dropdown, dbc.DropdownMenuItem(divider=True), slider,dbc.DropdownMenuItem(divider=True)])
+form = dbc.Form([dropdown, dbc.DropdownMenuItem(divider=True), slider,dbc.DropdownMenuItem(divider=True), dbc.Col(html.A(dbc.Button("run", id="run", color="primary")))])
 
 
 offcanvas = html.Div( children =   [dbc.Button([html.I(className="bi bi-list"), ""],
@@ -229,7 +216,8 @@ offcanvas = html.Div( children =   [dbc.Button([html.I(className="bi bi-list"), 
             
             children = [
                         html.H2("Configuration Menu", style = {"padding-bottom" : "60px"}),
-                        form
+                        form,
+                        html.P(id='title', style={"marginLeft":"20px"})
                     ],
             id="offcanvas-scrollable",
             scrollable=True,
@@ -259,6 +247,34 @@ def toggle_offcanvas_scrollable(n1, is_open):
     return is_open
 
 
+@app.callback(
+    Output("model-dropdown", "label"),
+    Output("model-dropdown-head", "children"),
+    [Input("yolox_s", "n_clicks"), Input("yolox_m", "n_clicks"), Input("yolox_l", "n_clicks")],
+)
+def update_label(n1, n2, n3):
+    id_lookup = {"yolox_s": "YOLOX S", "yolox_m": "YOLOX M", "yolox_l": "YOLOX L" }
+
+    ctx = dash.callback_context
+    if (n1 is None and n2 is None and n3 is None) or not ctx.triggered:
+        return "YOLOX S", "Detection Model Selected :: " + "YOLOX S"
+
+    button_id = ctx.triggered[0]["prop_id"].split(".")[0]
+   # instantiate Tracker
+    return  id_lookup[button_id], "Detection Model Selected :: " +id_lookup[button_id] 
+
+
+@app.callback(output=[Output(component_id="title", component_property="children")],
+              inputs=[Input(component_id="run", component_property="n_clicks")],
+              state=[State("model-dropdown","model_name")])
+def results(n_clicks, model_name):
+    global tracker;
+    global Main;
+    tracker = Tracker(filter_classes= None, model = modelmapping[model_name]['name'], ckpt=modelmapping[model_name]['path'])
+    Main = []
+    return ["Updated"]
+    
+
 fps = 0
 res = "A x B"
 stream = "Stream 1"
@@ -286,6 +302,7 @@ It outputs the figures
             Input('visual-update', 'n_intervals')
         ]   
 )
+
 def update_visuals(n):
     global average_speed, previous_av_speed
     fig1     = go.FigureWidget()
