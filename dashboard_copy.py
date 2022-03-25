@@ -270,7 +270,7 @@ def update_label(n1, n2, n3):
 def results(n_clicks, model_name):
     global tracker;
     global Main;
-    tracker = Tracker(filter_classes= None, model = modelmapping[model_name]['name'], ckpt=modelmapping[model_name]['path'])
+    tracker = Tracker(filter_classes= None, model = modelmapping[model_name]['Name'], ckpt=modelmapping[model_name]['path'])
     Main = []
     return ["Updated"]
     
