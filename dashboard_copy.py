@@ -266,7 +266,7 @@ def update_label(n1, n2, n3):
 
 @app.callback(output=[Output(component_id="title", component_property="children")],
               inputs=[Input(component_id="run", component_property="n_clicks")],
-              state=[State("model-dropdown", "value")])
+              state=[State("model-dropdown", "label")])
 def results(n_clicks, model_name):
     global tracker;
     global Main;
