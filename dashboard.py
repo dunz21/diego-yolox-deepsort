@@ -12,11 +12,11 @@ from collections import deque
 from flask import Flask, Response
 
 # Plotly-Dash Imports 
-
+import dash
 from dash import Dash, html, dcc, Input, Output, State
 import plotly.graph_objects as go
 import plotly.express as px
-import dash
+
 from flask import Flask
 import dash_bootstrap_components  as dbc
 
@@ -227,7 +227,7 @@ dbc.Offcanvas(
     scrollable = True,
     placement = "end",
     close_button = False,
-    is_open = True,
+    is_open = False,
     keyboard = True,
                 style = {
                 'background-color': 'rgba(20,20,20,0.9)',
@@ -249,6 +249,7 @@ def toggle_offcavas_scrollable(n1, is_open):
     if n1:
         return not is_open
     return is_open
+
 
 
 
