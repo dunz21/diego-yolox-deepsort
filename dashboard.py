@@ -240,7 +240,7 @@ dbc.Offcanvas(
 ])
 
 @app.callback(
-    Output('Offcanvas-scrollable', "is_open"),
+    Output('offcanvas-scrollable', "is_open"),
     Input('open-offcanvas-scrollable', "n_clicks"),
     State("offcanvas-scrollable", "is_open")
 )
