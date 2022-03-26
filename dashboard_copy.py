@@ -43,6 +43,8 @@ modelmapping = {
     'YOLOX S' : {'Name' : 'yolox-s', 'path' : 'weights/yolox_s.pth'},
     'YOLOX M' : {'Name' : 'yolox-m', 'path' : 'weights/yolox_m.pth'},
     'YOLOX L' : {'Name' : 'yolox-l', 'path' : 'weights/yolox_l.pth'},
+    'YOLOX Nano' : {'Name' : 'yolox-nano', 'path' : 'weights/yolox_nano.pth'},
+    'YOLOX Tiny' : {'Name' : 'yolox-tiny', 'path' : 'weights/yolox_tiny.pth'},
 }
 
 
@@ -191,6 +193,10 @@ dropdown = dbc.Form(
                 dbc.DropdownMenuItem("YOLOX M", id = "yolox_m" ),
                 dbc.DropdownMenuItem(divider=True),
                 dbc.DropdownMenuItem("YOLOX L", id = "yolox_l" ),
+                dbc.DropdownMenuItem(divider=True),
+                dbc.DropdownMenuItem("YOLOX Nano", id = "yolox_nano" ),
+                dbc.DropdownMenuItem(divider=True),
+                dbc.DropdownMenuItem("YOLOX Tiny", id = "yolox_tiny" ),
 
             ],
         )
@@ -254,10 +260,10 @@ def toggle_offcanvas_scrollable(n1, is_open):
 @app.callback(
     Output("model-dropdown", "label"),
     Output("model-dropdown-head", "children"),
-    [Input("yolox_s", "n_clicks"), Input("yolox_m", "n_clicks"), Input("yolox_l", "n_clicks")],
+    [Input("yolox_s", "n_clicks"), Input("yolox_m", "n_clicks"), Input("yolox_l", "n_clicks"), Input("yolox_nano", "n_clicks"), Input("yolox_tiny", "n_clicks")],
 )
 def update_label(n1, n2, n3):
-    id_lookup = {"yolox_s": "YOLOX S", "yolox_m": "YOLOX M", "yolox_l": "YOLOX L" }
+    id_lookup = {"yolox_s": "YOLOX S", "yolox_m": "YOLOX M", "yolox_l": "YOLOX L", "yolox_nano": "YOLOX Nano", "yolox_tiny": "YOLOX Tiny" }
 
     ctx = dash.callback_context
     if (n1 is None and n2 is None and n3 is None) or not ctx.triggered:
