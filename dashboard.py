@@ -251,6 +251,24 @@ def toggle_offcavas_scrollable(n1, is_open):
     return is_open
 
 
+
+@app.callback(
+    Output("model-dropdown", "label"),
+    Output("model-dropdown-head", "children"),
+    [Input("yolox_s", "n_clicks"), Input("yolox_m", "n_clicks"), Input("yolox_l", "n_clicks")],
+)
+def update_label(n1, n2, n3):
+    id_lookup = {"yolox_s": "YOLOX S", "yolox_m": "YOLOX M", "yolox_l": "YOLOX L" }
+
+    ctx = dash.callback_context
+    if (n1 is None and n2 is None and n3 is None) or not ctx.triggered:
+        return "YOLOX S", "Detection Model Selected :: " + "YOLOX S"
+
+    button_id = ctx.triggered[0]["prop_id"].split(".")[0]
+   # instantiate Tracker
+    return  id_lookup[button_id], "Detection Model Selected :: " +id_lookup[button_id] 
+
+
 """
 This Function Takes the input as n_interval and will execute by itself after a certain time
 It outputs the figures 
