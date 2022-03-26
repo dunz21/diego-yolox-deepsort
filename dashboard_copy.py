@@ -268,11 +268,12 @@ def update_label(n1, n2, n3):
               inputs=[Input(component_id="run", component_property="n_clicks")],
               state=[State("model-dropdown", "label")])
 def results(n_clicks, model_name):
-    # global tracker;
-    # global Main;
-    # tracker = Tracker(filter_classes= None, model = modelmapping[model_name]['Name'], ckpt=modelmapping[model_name]['path'])
-    # Main = []
-    return ["Updated"]
+    global tracker;
+    global Main;
+    if n_clicks:
+        tracker = Tracker(filter_classes= None, model = modelmapping[model_name]['Name'], ckpt=modelmapping[model_name]['path'])
+        Main = []
+    return [""]
     
 
 fps = 0
