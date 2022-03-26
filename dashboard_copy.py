@@ -262,7 +262,7 @@ def toggle_offcanvas_scrollable(n1, is_open):
     Output("model-dropdown-head", "children"),
     [Input("yolox_s", "n_clicks"), Input("yolox_m", "n_clicks"), Input("yolox_l", "n_clicks"), Input("yolox_nano", "n_clicks"), Input("yolox_tiny", "n_clicks")],
 )
-def update_label(n1, n2, n3):
+def update_label(n1, n2, n3, n4, n5):
     id_lookup = {"yolox_s": "YOLOX S", "yolox_m": "YOLOX M", "yolox_l": "YOLOX L", "yolox_nano": "YOLOX Nano", "yolox_tiny": "YOLOX Tiny" }
 
     ctx = dash.callback_context
