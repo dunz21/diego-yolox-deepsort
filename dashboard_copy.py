@@ -21,7 +21,7 @@ from flask import Flask
 import dash_bootstrap_components  as dbc
 
 from mainTracker import Tracker, vis_track, draw_lines, lines
-# from flask_cloudflared import  run_with_cloudflared
+from flask_cloudflared import  run_with_cloudflared
 
 import plotly.io as pio
 
@@ -31,7 +31,7 @@ if dark:
 
 # Init Flask Server
 server = Flask(__name__)
-# run_with_cloudflared(server)
+run_with_cloudflared(server)
 # Init Dash App
 app = Dash(__name__, server = server, external_stylesheets=[dbc.themes.VAPOR, dbc.icons.BOOTSTRAP,'https://fonts.googleapis.com/css2?family=Montserrat'])
 
@@ -276,7 +276,7 @@ def results(n_clicks, model_name):
     if n_clicks:
         tracker = Tracker(filter_classes= None, model = modelmapping[model_name]['Name'], ckpt=modelmapping[model_name]['path'])
         Main = []
-    return [""]
+    return ["updated"]
     
 
 fps = 0
