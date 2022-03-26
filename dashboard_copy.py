@@ -208,7 +208,7 @@ slider = dbc.Form(
 form = dbc.Form([dropdown, dbc.DropdownMenuItem(divider=True), slider,dbc.DropdownMenuItem(divider=True), dbc.Col(html.A(dbc.Button("run", id="run", color="primary")))])
 
 
-offcanvas = html.Div( children =   [dbc.Button([html.I(className="bi bi-list"), ""],
+offcanvas = html.Div( children =   [dbc.Button( [ html.I(className="bi bi-list"), ""],
             id="open-offcanvas-scrollable",
             n_clicks=0,
              color="danger",

@@ -33,7 +33,7 @@ if dark:
 server = Flask(__name__)
 run_with_cloudflared(server)
 # Init Dash App
-app = Dash(__name__, server = server, external_stylesheets=[dbc.themes.VAPOR, 'https://fonts.googleapis.com/css2?family=Montserrat'])
+app = Dash(__name__, server = server, external_stylesheets=[dbc.themes.VAPOR, dbc.icons.BOOTSTRAP,'https://fonts.googleapis.com/css2?family=Montserrat'])
 
 # Init Tracker
 tracker = Tracker(filter_classes= None, model = 'yolox-s', ckpt='weights/yolox_s.pth')
@@ -176,6 +176,68 @@ res = "A x B"
 stream = "Stream 1"
 average_speed = 0
 previous_av_speed = 0
+
+# ----------------------------------------Off Canvas Form -----------------------------------------------------------#
+
+dropdown = dbc.Form(
+    [
+        html.H6("Detection Model Selected :: YOLOX S", id = "model-dropdown-head"),
+        dbc.DropdownMenu(
+            label="YOLOX S",
+            id = 'model-dropdown',
+            menu_variant="dark",
+            children=[
+                dbc.DropdownMenuItem("YOLOX S", id = "yolox_s" ),
+                dbc.DropdownMenuItem(divider=True),
+                dbc.DropdownMenuItem("YOLOX M", id = "yolox_m" ),
+                dbc.DropdownMenuItem(divider=True),
+                dbc.DropdownMenuItem("YOLOX L", id = "yolox_l" ),
+
+            ],
+        )
+    ]
+)
+
+
+slider = dbc.Form(
+    [
+        dbc.Label("Confidence", html_for="slider"),
+        dcc.Slider(id="slider", min=0, max=1, step=0.05, value=3, tooltip={"placement": "top", "always_visible": True}, className = "sl"),
+    ], style = {'padding-top':'40px'}
+)
+
+form = dbc.Form([dropdown, dbc.DropdownMenuItem(divider=True), slider,dbc.DropdownMenuItem(divider=True), dbc.Col(html.A(dbc.Button("run", id="run", color="primary")))])
+
+# ----------------------------------------Off Canvas Menu -----------------------------------------------------------#
+offcanvas = html.Div(children = [dbc.Button([html.I(className = "bi bi-list"), ""],
+                id = "open-offcanvas-scrollable",
+                n_clicks = 0,
+                color = "danger",
+                outline = True,
+                size = "lg"
+),
+
+dbc.Offcanvas(
+    children = [
+        html.H2("Configuration Menu", style = {'padding-bottom':"60px"}),
+        form,
+        html.Div(id = 'update_tracker')
+    ],
+    id = "offcanvas-scrollable",
+    scrollable = True,
+    placement = "end",
+    close_button = False,
+    is_open = True,
+    keyboard = True,
+                style = {
+                'background-color': 'rgba(20,20,20,0.9)',
+                'width': '550px',
+                'padding' : "20px 40px 20px 40px"
+
+            }
+        )
+
+])
 
 
 """
@@ -326,7 +388,7 @@ app.layout = html.Div([
     # Input for all the updating visuals
     dcc.Interval(id='visual-update',interval=2000,n_intervals = 0),
 
-    dbc.Row([header], style = {"padding":"20px"}), #Header
+    dbc.Row([header, dbc.Col(children = [offcanvas])], style = {"padding":"20px"}), #Header
     dbc.Row(id="cards", style = {"padding":"20px"}), #Cards
     dbc.Row([videofeeds, figure1, figure2], style = {"padding":"20px"}), #VideoFeed and 2 Graphs
     dbc.Row([piefig, sunfig ,dirfig], style = {"padding":"20px"}), #Header
