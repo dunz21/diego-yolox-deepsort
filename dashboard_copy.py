@@ -100,9 +100,12 @@ class VideoCamera(object):
         if success:
             t1 = time_synchronized()
             image = draw_lines(lines, image)
-            image, bbox, data = tracker.update(image, logger_=False)
-            image = vis_track(image, bbox)
-            Main.extend(data)
+            try:
+                image, bbox, data = tracker.update(image, logger_=False)
+                image = vis_track(image, bbox)
+                Main.extend(data)
+            except:
+                pass
             fps  = f"{int((1./(time_synchronized()-t1)))}"
             ret, jpeg = cv2.imencode('.jpg', image)
             return jpeg.tobytes()
