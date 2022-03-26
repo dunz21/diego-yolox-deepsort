@@ -36,7 +36,7 @@ run_with_cloudflared(server)
 app = Dash(__name__, server = server, external_stylesheets=[dbc.themes.VAPOR, dbc.icons.BOOTSTRAP,'https://fonts.googleapis.com/css2?family=Montserrat'])
 
 # Init Tracker
-tracker = Tracker(filter_classes= None, model = 'yolox-s', ckpt='weights/yolox_s.pth')
+tracker = Tracker(filter_classes= None, model = 'yolox-nano', ckpt='weights/yolox_nano.pth')
 
 Main = []
 modelmapping = {
