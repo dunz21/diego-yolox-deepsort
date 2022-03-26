@@ -220,7 +220,8 @@ offcanvas = html.Div( children =   [dbc.Button([html.I(className="bi bi-list"), 
             children = [
                         html.H2("Configuration Menu", style = {"padding-bottom" : "60px"}),
                         form,
-                        html.P(id='title', style={"marginLeft":"20px"})
+                        # html.P(id='title', style={"marginLeft":"20px"})
+                        html.Div(id ='update_tracker')
                     ],
             id="offcanvas-scrollable",
             scrollable=True,
@@ -267,7 +268,7 @@ def update_label(n1, n2, n3):
     return  id_lookup[button_id], "Detection Model Selected :: " +id_lookup[button_id] 
 
 
-@app.callback(output=[Output(component_id="title", component_property="children")],
+@app.callback(output=[Output(component_id="update_tracker", component_property="children")],
               inputs=[Input(component_id="run", component_property="n_clicks")],
               state=[State("model-dropdown", "label")])
 def results(n_clicks, model_name):
@@ -276,7 +277,7 @@ def results(n_clicks, model_name):
     if n_clicks:
         tracker = Tracker(filter_classes= None, model = modelmapping[model_name]['Name'], ckpt=modelmapping[model_name]['path'])
         Main = []
-    return ["updated"]
+    return None
     
 
 fps = 0
