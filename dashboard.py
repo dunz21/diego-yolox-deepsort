@@ -270,6 +270,30 @@ def update_label(n1, n2, n3):
     return  id_lookup[button_id], "Detection Model Selected :: " +id_lookup[button_id] 
 
 
+modelmapping = {
+    'YOLOX S' : {'Name' : 'yolox-s', 'path' : 'weights/yolox_s.pth'},
+    'YOLOX M' : {'Name' : 'yolox-m', 'path' : 'weights/yolox_m.pth'},
+    'YOLOX L' : {'Name' : 'yolox-l', 'path' : 'weights/yolox_l.pth'},
+}
+
+
+
+@app.callback(output = [Output("update_tracker", "children")],
+inputs = [Input('run', "n_clicks")],
+state = [State("model-dropdown", "label")]
+
+)
+def retrack(n_clicks, model_name):
+    global tracker;
+    global Main;
+    if n_clicks:
+        tracker = Tracker(filter_classes= None, model = modelmapping[model_name]['Name'], ckpt=modelmapping[model_name]['path'])
+        Main = []
+    return None
+
+
+
+
 """
 This Function Takes the input as n_interval and will execute by itself after a certain time
 It outputs the figures 
