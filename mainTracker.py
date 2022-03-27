@@ -50,11 +50,10 @@ object_counter = {
 pts = {}
 
 def vis_track(img, outputs):
+    if len(outputs) == 0:
+        return img
 
     for key in list(pts):
-        if len(outputs ==0):
-            return img
-            
         if key not in outputs[:,-2]:
             pts.pop(key)
 
