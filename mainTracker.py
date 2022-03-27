@@ -52,6 +52,9 @@ pts = {}
 def vis_track(img, outputs):
 
     for key in list(pts):
+        if len(outputs ==0):
+            return img
+            
         if key not in outputs[:,-2]:
             pts.pop(key)
 
