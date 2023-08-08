@@ -1,4 +1,5 @@
 import sys
+import os
 sys.path.insert(0, './YOLOX')
 import torch
 import cv2
@@ -8,7 +9,7 @@ from yolox.exp import get_exp
 import numpy as np
 from collections import deque
 from collections import Counter
-
+from byte_tracker import BYTETracker
 # importing Detector
 from yolox.data.datasets.coco_classes import COCO_CLASSES
 from detector import Predictor
@@ -29,13 +30,11 @@ class_names = COCO_CLASSES
 
 
 lines  = [
-    {'Title' : 'Line1', 'Cords' : [(580, 500), (100, 500)]},
-    {'Title' : 'Line2', 'Cords' : [(680, 500), (1070, 500)]}
+    {'Title' : 'Line1', 'Cords' : [(680,650), (950,450)]}
 ]
 
 object_counter = {
-    'Line1' : Counter(),
-    'Line2' : Counter()
+    'Line1' : Counter()
 }
 
 
@@ -44,7 +43,7 @@ object_counter = {
 #Draw the Lines
 def draw_lines(lines, img):
     for line in lines:
-        img = cv2.line(img, line['Cords'][0], line['Cords'][1], (255,255,255), 3)
+        img = cv2.line(img, line['Cords'][0], line['Cords'][1], (0,255,0), 3)
     return img
 
 # Update the Counter
@@ -61,12 +60,13 @@ def update_counter(centerpoints, obj_name):
 
 # Draw the Final Results
 def draw_results(img):
-    x = 100
+    height, width, _ = img.shape 
+    x = width - 300
     y = 100
-    offset = 50
+    offset = 0
     for line_name, line_counter in object_counter.items():
         Text = line_name + " : " + ' '.join([f"{label}={count}" for label, count in line_counter.items()])
-        cv2.putText(img, Text, (x,y), 6, 1, (104, 52, 235), 3, cv2.LINE_AA)
+        cv2.putText(img, Text, (x,y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 3, cv2.LINE_AA)
         y = y+offset
     return img
 
@@ -149,19 +149,30 @@ class Tracker():
 
 if __name__=='__main__':
     
-        
+    filter_classes = ['person'] # We are only interested in person
     tracker = Tracker(filter_classes=None, model='yolox-s', ckpt='weights/yolox_s.pth')    # instantiate Tracker
 
-    cap = cv2.VideoCapture(sys.argv[1]) 
+    video_path = sys.argv[1]
+
+    cap = cv2.VideoCapture(video_path) 
     width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)  # float
     height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)  # float
     fps = cap.get(cv2.CAP_PROP_FPS)
     property_id = int(cv2.CAP_PROP_FRAME_COUNT) 
     length = int(cv2.VideoCapture.get(cap, property_id))
 
+    # Get the directory and filename of the input video
+    video_dir, video_filename = os.path.split(video_path)
+    video_name, video_ext = os.path.splitext(video_filename)
+
+    # Modify the output video path to be in the same directory and with the desired name format
+    output_video_path = os.path.join(video_dir, f'count_demo_{video_name}.mp4')
+    
     vid_writer = cv2.VideoWriter(
-        f'count_demo_{sys.argv[1]}', cv2.VideoWriter_fourcc(*"mp4v"), fps, (int(width), int(height))
-    ) # open one video
+        output_video_path, cv2.VideoWriter_fourcc(*"mp4v"), fps, (int(width), int(height))
+    )
+
+
     frame_count = 0
     fps = 0.0
     while True:

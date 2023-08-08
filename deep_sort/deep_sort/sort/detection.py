@@ -27,7 +27,8 @@ class Detection(object):
     """
 
     def __init__(self, tlwh, confidence, feature, oid):
-        self.tlwh = np.asarray(tlwh, dtype=np.float)
+        # self.tlwh = np.asarray(tlwh, dtype=np.float) DIEGO
+        self.tlwh = np.asarray(tlwh, dtype=float) # or dtype=np.float64
         self.confidence = float(confidence)
         self.feature = np.asarray(feature, dtype=np.float32)
         self.oid = oid
