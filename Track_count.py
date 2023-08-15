@@ -118,8 +118,10 @@ class Tracker():
                             use_cuda=True)
         self.filter_classes = filter_classes
     def update(self, image, visual = True, logger_=True):
-        height, width, _ = image.shape 
+        height, width, _ = image.shape
+        t1 = time_synchronized()
         _,info = self.detector.inference(image, visual=False, logger_=logger_)
+        t2 = time_synchronized()
         outputs = []
         
         if info['box_nums']>0:
@@ -135,7 +137,10 @@ class Tracker():
                 scores.append(score)
                 
             bbox_xywh = torch.Tensor(bbox_xywh)
+            t3 = time_synchronized()
             outputs = self.deepsort.update(bbox_xywh, scores, info['class_ids'],image)
+            t4 = time_synchronized()
+
             data = []
             if len(outputs) > 0:
                 if visual:
@@ -144,7 +149,7 @@ class Tracker():
                         identities =outputs[:, -2]
                         object_id =outputs[:, -1]
                         image = draw_boxes(image, bbox_xyxy, object_id,identities)
-            return image, outputs
+            return image, outputs, t4-t3,t2-t1
 
 
 if __name__=='__main__':
@@ -152,7 +157,8 @@ if __name__=='__main__':
     filter_classes = ['person'] # We are only interested in person
     tracker = Tracker(filter_classes=None, model='yolox-s', ckpt='weights/yolox_s.pth')    # instantiate Tracker
 
-    video_path = sys.argv[1]
+    # video_path = sys.argv[1]
+    video_path = './videos/retail5.mp4'
 
     cap = cv2.VideoCapture(video_path) 
     width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)  # float
@@ -160,7 +166,7 @@ if __name__=='__main__':
     fps = cap.get(cv2.CAP_PROP_FPS)
     property_id = int(cv2.CAP_PROP_FRAME_COUNT) 
     length = int(cv2.VideoCapture.get(cap, property_id))
-
+    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     # Get the directory and filename of the input video
     video_dir, video_filename = os.path.split(video_path)
     video_name, video_ext = os.path.splitext(video_filename)
@@ -177,9 +183,10 @@ if __name__=='__main__':
     fps = 0.0
     while True:
         ret_val, frame = cap.read() # read frame from video
-        t1 = time_synchronized()
         if ret_val:
-            frame, bbox = tracker.update(frame, visual=True, logger_=False)  # feed one frame and get result
+            t1 = time_synchronized()
+            frame, bbox, time_inf, time_tracker = tracker.update(frame, visual=True, logger_=False)  # feed one frame and get result
+            t2 = time_synchronized()
             frame = draw_lines(lines, img = frame)
             frame = draw_results(img= frame)
             vid_writer.write(frame)
@@ -187,6 +194,8 @@ if __name__=='__main__':
             if ch == 27 or ch == ord("q") or ch == ord("Q"):
                 break
             fps  = ( fps + (1./(time_synchronized()-t1)) ) / 2
+            frame_count += 1
+            print(f'video ({frame_count}/{total_frames}) {video_path}: ({(1E3 * (t2 - t1)):.1f}ms) Total Inference ({1E3 * time_inf:.1f}) Inf , ({1E3 * time_tracker:.1f}) Tracker')
         else:
             break
 
