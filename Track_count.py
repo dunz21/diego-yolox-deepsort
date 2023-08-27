@@ -153,12 +153,12 @@ class Tracker():
 
 
 if __name__=='__main__':
-    
+    # torch.set_default_device('mps')
     filter_classes = ['person'] # We are only interested in person
     tracker = Tracker(filter_classes=None, model='yolox-s', ckpt='weights/yolox_s.pth')    # instantiate Tracker
 
     # video_path = sys.argv[1]
-    video_path = './videos/retail5.mp4'
+    video_path = './videos/retail.mp4'
 
     cap = cv2.VideoCapture(video_path) 
     width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)  # float

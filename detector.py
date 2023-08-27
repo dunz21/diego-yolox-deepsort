@@ -52,7 +52,6 @@ class Predictor():
 
         with torch.no_grad():
             t0 = time.time()
-            # img = img.to('mps')
             outputs = self.model(img)
             outputs = postprocess(
                 outputs, self.exp.num_classes, self.exp.test_conf, self.exp.nmsthre 
