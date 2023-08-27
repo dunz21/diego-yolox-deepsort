@@ -201,4 +201,4 @@ if __name__=='__main__':
 
     cap.release()
     vid_writer.release()
-    cv2.destroyAllWindows()
+    # cv2.destroyAllWindows()
